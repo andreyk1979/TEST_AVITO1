@@ -1,12 +1,13 @@
 package com.amr.project.dao.impl;
 
 import com.amr.project.dao.abstracts.ReadWriteDao;
-
+import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+@Repository
 public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
     private final Class<T> clazz;
 
