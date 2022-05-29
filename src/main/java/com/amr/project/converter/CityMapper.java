@@ -5,12 +5,13 @@ import com.amr.project.model.dto.UserDto;
 import com.amr.project.model.entity.City;
 import com.amr.project.model.entity.Country;
 import com.amr.project.model.entity.User;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CityMapper {
     CityMapper INSTANCE = Mappers.getMapper(CityMapper.class);
 
