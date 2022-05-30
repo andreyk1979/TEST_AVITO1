@@ -10,13 +10,8 @@ import com.amr.project.model.dto.ShopDto;
 import com.amr.project.model.entity.Coupon;
 import com.amr.project.model.entity.Item;
 import com.amr.project.model.entity.Shop;
-import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.ReadWriteService;
 import com.amr.project.service.impl.ReadWriteServiceImpl;
-import com.amr.project.service.impl.ServiceImplItem;
-import com.amr.project.service.impl.ServiceImplShop;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +32,7 @@ public class SearchAvitoRestContoller {
     @PersistenceContext
     private EntityManager em;
 
-    private ReadWriteService<Item, Long> serviceImplItem = new ReadWriteServiceImpl<>(new ReadWriteDao<Item, Long>() {
+    private final ReadWriteService<Item, Long> serviceImplItem = new ReadWriteServiceImpl<>(new ReadWriteDao<Item, Long>() {
         @Override
         public void persist(Item entity) {
             em.persist(entity);
