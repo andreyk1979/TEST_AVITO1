@@ -1,7 +1,9 @@
 package com.amr.project.dao.abstracts;
 
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+@Repository
 public interface ReadWriteDao<T, K> {
 
     void persist(final T entity);

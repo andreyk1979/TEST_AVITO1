@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Mapper(componentModel = "spring",injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ReviewMapper {
     @Mapping(target = "itemId", source = "item.id")
     ReviewDto toDto(Review review);
+
     Review toModel(ReviewDto reviewDto);
 }

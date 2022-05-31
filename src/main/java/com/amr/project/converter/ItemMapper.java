@@ -7,8 +7,9 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
-@Mapper(componentModel = "spring",injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = ReviewMapper.class)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {ReviewMapper.class, ImageMapper.class})
 public interface ItemMapper {
     ItemDto toDto(Item item);
 

@@ -10,8 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
-@Mapper(componentModel = "spring",injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ShopMapper {
     ShopDto toDto(Shop shop);
 

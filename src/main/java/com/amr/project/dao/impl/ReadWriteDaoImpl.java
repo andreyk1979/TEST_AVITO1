@@ -1,6 +1,7 @@
 package com.amr.project.dao.impl;
 
 import com.amr.project.dao.abstracts.ReadWriteDao;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,7 +50,7 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
 
     @Override
     public boolean existsById(K id) {
-        return  em.find(clazz, id) != null;
+        return em.find(clazz, id) != null;
     }
 
     @Override
