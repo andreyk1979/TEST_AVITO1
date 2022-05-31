@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-@Service
+
 public class ReadWriteServiceImpl<T, K> implements ReadWriteService<T, K> {
 
     protected final ReadWriteDao<T, K> dao;
