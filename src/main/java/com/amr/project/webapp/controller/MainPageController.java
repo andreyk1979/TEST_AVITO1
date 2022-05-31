@@ -1,6 +1,7 @@
 package com.amr.project.webapp.controller;
 
 import com.amr.project.model.dto.ItemDto;
+import com.amr.project.model.dto.MainPageDto;
 import com.amr.project.model.dto.ShopDto;
 import com.amr.project.model.entity.Item;
 import com.amr.project.model.entity.Shop;
@@ -14,18 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mainpage")
+@RequestMapping("/api")
 public class MainPageController {
     @Autowired
     private MainPageService mainPageService;
 
-    @GetMapping("/items")
-    public ResponseEntity<List<ItemDto>> showFourMostPopularItems() {
-        return ResponseEntity.ok(mainPageService.showFourMostPopularItems());
+    @GetMapping("/mainpage")
+    public ResponseEntity<MainPageDto> showFourMostPopularItems() {
+        return ResponseEntity.ok(mainPageService.getMainPageDto());
     }
 
-    @GetMapping("/shops")
-    public ResponseEntity<List<ShopDto>> showSixMostPopularShops() {
-        return ResponseEntity.ok(mainPageService.showSixMostPopularShops());
-    }
 }
