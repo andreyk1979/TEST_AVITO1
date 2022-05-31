@@ -12,6 +12,8 @@ import com.amr.project.model.entity.Item;
 import com.amr.project.model.entity.Shop;
 import com.amr.project.service.abstracts.ReadWriteService;
 import com.amr.project.service.impl.ReadWriteServiceImpl;
+import com.amr.project.service.impl.ServiceImplItem;
+import com.amr.project.service.impl.ServiceImplShop;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,105 +31,13 @@ import java.util.List;
 @RequestMapping("/api/search")
 public class SearchAvitoRestContoller {
 
-    @PersistenceContext
-    private EntityManager em;
+    private final ReadWriteService<Item, Long> serviceImplItem;
+    private final ReadWriteService<Shop, Long> serviceImplShop;
 
-    private final ReadWriteService<Item, Long> serviceImplItem = new ReadWriteServiceImpl<>(new ReadWriteDao<Item, Long>() {
-        @Override
-        public void persist(Item entity) {
-            em.persist(entity);
-        }
-
-        @Override
-        public void update(Item entity) {
-            em.merge(entity);
-        }
-
-        @Override
-        public void delete(Item entity) {
-            em.remove(em.contains(entity) ? entity : em.merge(entity));
-        }
-
-        @Override
-        public void deleteByIdCascadeEnable(Long id) {
-            em.remove(em.find(Item.class,id));
-        }
-
-        @Override
-        public void deleteByIdCascadeIgnore(Long id) {
-            em.createQuery("DELETE FROM " + Item.class.getName() + " u WHERE u.id = :id")
-                    .setParameter("id", id)
-                    .executeUpdate();
-        }
-
-        @Override
-        public boolean existsById(Long id) {
-            return em.find(Item.class, id) != null;
-        }
-
-        @Override
-        public Item findById(Long id) {
-            return em.find(Item.class, id);
-        }
-
-        @Override
-        public List<Item> findAll() {
-            return em.createQuery("select u from " + Item.class.getName() + " u", Item.class)
-                    .getResultList();
-        }
-    });
-    private ReadWriteService<Shop, Long> serviceImplShop = new ReadWriteServiceImpl(new ReadWriteDao<Shop, Long>() {
-        @Override
-        public void persist(Shop entity) {
-            em.persist(entity);
-        }
-
-        @Override
-        public void update(Shop entity) {
-            em.merge(entity);
-        }
-
-        @Override
-        public void delete(Shop entity) {
-            em.remove(em.contains(entity) ? entity : em.merge(entity));
-        }
-
-        @Override
-        public void deleteByIdCascadeEnable(Long id) {
-            em.remove(em.find(Shop.class,id));
-        }
-
-        @Override
-        public void deleteByIdCascadeIgnore(Long id) {
-            em.createQuery("DELETE FROM " + Shop.class.getName() + " u WHERE u.id = :id")
-                    .setParameter("id", id)
-                    .executeUpdate();
-        }
-
-        @Override
-        public boolean existsById(Long id) {
-            return em.find(Shop.class, id) != null;
-        }
-
-        @Override
-        public Shop findById(Long id) {
-            return em.find(Shop.class, id);
-        }
-
-        @Override
-        public List<Shop> findAll() {
-            return em.createQuery("select u from " + Shop.class.getName() + " u", Shop.class)
-                    .getResultList();
-        }
-    });
-//
-//    protected final ServiceImplItem serviceImplItem;
-//    protected final ServiceImplShop serviceImplShop;
-//
-//    public SearchAvitoRestContoller(ServiceImplItem serviceImplItem, ServiceImplShop serviceImplShop) {
-//        this.serviceImplItem = serviceImplItem;
-//        this.serviceImplShop = serviceImplShop;
-//    }
+    public SearchAvitoRestContoller(ReadWriteService<Item, Long> serviceImplItem, ReadWriteService<Shop, Long> serviceImplShop) {
+        this.serviceImplItem = serviceImplItem;
+        this.serviceImplShop = serviceImplShop;
+    }
 
 
     @GetMapping("/{string}")
