@@ -12,4 +12,6 @@ public interface DiscountMapper {
     @Mapping(target = "userId", source = "shop.user.id")
     @Mapping(target = "shopId", source = "shop.id")
     DiscountDto toDto(Discount discount);
+
+    Discount toModel(DiscountDto discountDto);
 }

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public interface ItemDao<ItemDto, Long> extends ReadWriteDao<ItemDto, Long> {
+public interface ItemDao<Item, Long> extends ReadWriteDao<Item, Long> {
 
-    List<ItemDto> findItemList(String name);
+    List<Item> findItemList(String name);
 }
