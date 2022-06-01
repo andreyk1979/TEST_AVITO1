@@ -9,4 +9,6 @@ import org.mapstruct.Mapper;
 public interface CountryMapper {
 
     CountryDto toDto(Country country);
+
+    Country toModel(CountryDto countryDto);
 }

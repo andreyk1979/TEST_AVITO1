@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemShopSearchServiceImpl implements ItemShopSearchService {
+
     protected final ItemDao itemDao;
     protected final ShopDao shopDao;
 

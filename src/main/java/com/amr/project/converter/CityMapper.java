@@ -6,7 +6,6 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CityMapper {
 
@@ -14,4 +13,5 @@ public interface CityMapper {
     @Mapping(source = "country.id", target = "countryId")
     CityDto toDto(City city);
 
+    City toModel(CityDto cityDto);
 }
