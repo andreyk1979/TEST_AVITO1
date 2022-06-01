@@ -12,7 +12,7 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
     private final Class<T> clazz;
 
     @PersistenceContext
-   private EntityManager em;
+   protected EntityManager em;
 
     @SuppressWarnings("unchecked")
     public ReadWriteDaoImpl() {
