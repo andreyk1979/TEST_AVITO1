@@ -7,7 +7,6 @@ import org.mapstruct.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
  uses = {ReviewMapper.class, ImageMapper.class, DiscountMapper.class, CityMapper.class})
 public interface ShopMapper {
