@@ -1,17 +1,15 @@
 package com.amr.project.converter;
 
-import com.amr.project.model.dto.ReviewDto;
-import com.amr.project.model.entity.Review;
+import com.amr.project.model.dto.DiscountDto;
+import com.amr.project.model.entity.Discount;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface ReviewMapper {
+public interface DiscountMapper {
 
-    @Mapping(target = "itemId", source = "item.id")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "shopId", source = "shop.id")
-    ReviewDto toDto(Review review);
-
+    DiscountDto toDto(Discount discount);
 }
