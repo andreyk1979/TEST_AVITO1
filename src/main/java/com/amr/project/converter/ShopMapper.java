@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 public interface ShopMapper {
 
     @Mapping(target = "couponIds", source = "coupons")
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "location", source = "address.city")
+    @Mapping(target = "userId", source = "shop.user.id")
+    @Mapping(target = "location", source = "shop.address.city")
     ShopDto toDto(Shop shop, List<Long> coupons);
 
     default List<Long> getCouponList(Shop shop) {
