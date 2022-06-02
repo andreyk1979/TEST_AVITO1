@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public interface ShopMapper {
     @Mapping(target = "couponIds",
             expression = "java(shop.getCoupons().stream().map(Coupon::getId).collect(Collectors.toList()))")
+    @Mapping(target = "userId", source = "user.id")
     ShopDto toDto(Shop shop);
 
     Shop toModel(ShopDto shopDto);

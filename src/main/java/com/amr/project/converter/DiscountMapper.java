@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public interface DiscountMapper {
 
     @Mapping(target = "shopId", source = "shop.id")
+    @Mapping(target = "userId", source = "shop.user.id")
     DiscountDto toDto(Discount discount);
 
     Discount toModel(DiscountDto discountDto);

@@ -16,6 +16,8 @@ import java.util.List;
 public interface ReviewMapper {
     @Mapping(target = "itemId", source = "item.id")
     @Mapping(target = "shopId", source = "shop.id")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userName", source = "user.id")
     ReviewDto toDto(Review review);
 
     Review toModel(ReviewDto reviewDto);
