@@ -18,7 +18,8 @@ public class swaggerController {
 
     /** C помощью аннотации @ApiOperation над методом контроллера можно добавить описание метода */
 
-    @ApiOperation("Метод getMethod возращает html страницу helloWorld")
+    @ApiOperation(value = "Метод getHelloWorld", notes = "Метод getHelloWorld принемает CountryDto " +
+            "и возращает html страницу helloWorld")
     @GetMapping()
     public String getHelloWorld(@ModelAttribute("countryDto") CountryDto countryDto) {
         return "helloWorld";

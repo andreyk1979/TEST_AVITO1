@@ -4,9 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
 
 @Configuration
 @EnableSwagger2
@@ -17,6 +21,20 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.amr.project"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .apiInfo(outApiInfo());
+    }
+
+    private ApiInfo outApiInfo() {
+        return new ApiInfo(
+                "Project avito2_1",
+                "This is project avito2_1 documentation",
+                "0.0.1-SNAPSHOT",
+                "/api/swagger",
+                new Contact("Jon","/api/swagger","name@mail.com"),
+                "",
+                "",
+                new ArrayList()
+        );
     }
 }

@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = Long.class)
 public class CategoryDto {
-    @ApiModelProperty("id категории")
     private Long id;
-    @ApiModelProperty("назание категории")
     private String name;
 }

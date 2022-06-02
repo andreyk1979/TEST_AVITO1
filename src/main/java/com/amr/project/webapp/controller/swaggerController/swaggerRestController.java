@@ -3,6 +3,7 @@ package com.amr.project.webapp.controller.swaggerController;
 import com.amr.project.model.dto.CategoryDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @Api(description = "Пример Rest контроллера с аннотациями Swagger")
 public class swaggerRestController {
 
-    /** C помощью аннотации @ApiOperation над методом контроллера можно добавить описание метода */
+    /** C помощью аннотации @ApiOperation над методом контроллера можно добавить описание метода,
+     * с помощью аннотации @ApiParam перед параметром метода можно добавить описание параметра  */
 
-    @ApiOperation(value = "Метод getCategoryDto возращает CategoryDto")
+    @ApiOperation(value = "Метод postCategoryDto",
+            notes = "Метод postCategoryDto принемает и возращает CategoryDto")
     @PostMapping()
-    public ResponseEntity<CategoryDto> getCategoryDto(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<CategoryDto> postCategoryDto(@ApiParam("Dto категория") @RequestBody CategoryDto categoryDto) {
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);
     }
 }
