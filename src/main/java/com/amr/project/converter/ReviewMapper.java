@@ -15,7 +15,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ReviewMapper {
     @Mapping(target = "itemId", source = "item.id")
+    @Mapping(target = "shopId", source = "shop.id")
     ReviewDto toDto(Review review);
 
     Review toModel(ReviewDto reviewDto);
+
 }
