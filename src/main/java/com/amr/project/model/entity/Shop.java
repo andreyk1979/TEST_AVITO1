@@ -48,15 +48,7 @@ public class Shop implements Serializable {
     private String phone;
     @Column
     private String description;
-
-    private int count;      //что за поле? Нет описания
-
     private double rating;
-
-    // Сущность Country входит в Address
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    private Country country;*/
-
 
     @OneToMany(
             mappedBy = "shop",
