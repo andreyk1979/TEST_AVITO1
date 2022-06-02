@@ -48,7 +48,7 @@ public class SearchTest {
     }
     @Test
     public void testNoContent() throws Exception {
-        this.mvc.perform(get("/api/search/{string}", "sdsdgdfghsd"))
+        this.mvc.perform(get("/api/search/{string}", "fdgfdgdfgfdg"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }

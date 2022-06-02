@@ -20,6 +20,7 @@ public interface ShopMapper {
             ".map(Coupon::getId).collect(Collectors.toList()))")
     ShopDto toDto(Shop shop);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Shop toModel(ShopDto shopDto);
 
     List<ShopDto> toDtoList(List<Shop> shopList);

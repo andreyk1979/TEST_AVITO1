@@ -13,5 +13,6 @@ public interface CityMapper {
     @Mapping(source = "country.id", target = "countryId")
     CityDto toDto(City city);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     City toModel(CityDto cityDto);
 }

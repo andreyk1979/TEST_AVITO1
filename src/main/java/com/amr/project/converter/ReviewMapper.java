@@ -18,5 +18,6 @@ public interface ReviewMapper {
     @Mapping(target = "date", expression = "java(review.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())")
     ReviewDto toDto(Review review);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Review toModel(ReviewDto reviewDto);
 }

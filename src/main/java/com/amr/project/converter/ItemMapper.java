@@ -14,6 +14,7 @@ public interface ItemMapper {
 
     ItemDto toDto(Item item);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Item toModel(ItemDto itemDto);
 
     List<ItemDto> toDtoList(List<Item> itemList);

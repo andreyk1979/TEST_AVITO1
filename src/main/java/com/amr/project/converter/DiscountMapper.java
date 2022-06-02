@@ -13,5 +13,6 @@ public interface DiscountMapper {
     @Mapping(target = "shopId", source = "shop.id")
     DiscountDto toDto(Discount discount);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Discount toModel(DiscountDto discountDto);
 }
