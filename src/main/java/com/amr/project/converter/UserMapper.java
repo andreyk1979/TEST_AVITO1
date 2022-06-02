@@ -1,12 +1,11 @@
 package com.amr.project.converter;
 
-import com.amr.project.model.dto.CouponDto;
+
 import com.amr.project.model.dto.UserDto;
-import com.amr.project.model.entity.Coupon;
+
 import com.amr.project.model.entity.User;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 @Component

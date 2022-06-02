@@ -1,9 +1,7 @@
 package com.amr.project.converter;
 
 import com.amr.project.model.dto.DiscountDto;
-import com.amr.project.model.dto.UserDto;
 import com.amr.project.model.entity.Discount;
-import com.amr.project.model.entity.User;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

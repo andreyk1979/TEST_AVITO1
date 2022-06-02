@@ -9,6 +9,7 @@ import com.amr.project.dao.impl.ShopRepositoryImpl;
 import com.amr.project.model.dto.MainPageDto;
 import com.amr.project.service.abstracts.MainPageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
