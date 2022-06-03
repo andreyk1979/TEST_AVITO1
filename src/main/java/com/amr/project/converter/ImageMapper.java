@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ImageMapper {
+
     ImageDto toDto(Image image);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Image toModel(ImageDto imageDto);
 }

@@ -17,4 +17,11 @@ public class ItemRepositoryImpl extends ReadWriteDaoImpl<Item, Long> implements 
         return em.createQuery("select s from Item s order by s.rating DESC")
                 .setMaxResults(4).getResultList();
     }
+
+    @Override
+    public void isPretendedToBeDeleted(Long id) {
+        em.createQuery("update Item set isPretendedToBeDeleted = :boolParam WHERE Item.id = :id")
+                .setParameter("boolParam", true)
+                .setParameter("id", id);
+    }
 }

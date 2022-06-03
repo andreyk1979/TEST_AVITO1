@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Shop</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <br>
+            <ul class="nav">
+                <img th:src="@{/showcasePictures/logo.png}" >
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Магазины</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Товары</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Избранное</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Еще..</a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <img  th:src="@{'data:image/jpeg;base64,'+${logo}}" />
+            <br>
+            <br>
+            <h3 th:utext="${singleShop.name}">
+
+            </h3>
+
+            <hr>
+            <dl>
+                <dt>Город:</dt>
+                <dd th:utext="${singleShop.location.getName}">
+                <dt>Почта:</dt>
+                <dd th:utext="${singleShop.email}">
+                <dt>Телефон:</dt>
+                <dd th:utext="${singleShop.phone}">
+
+            </dl>
+        </div>
+        <div class="col-md-9">
+
+            <div class="row">
+                <div class="col-md-9">
+                    <h3>
+                        Самые популярные товары
+                    </h3>
+                    <br>
+                </div>
+                <div class="col-md-3">
+
+                    <button type="button" class="btn btn-success">
+                        Список всех товаров
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4" th:each="good : ${popularItems}">
+                    <div class="card text-lg-center" style="width: 18rem;" >
+                        <img  th:src="@{'data:image/jpeg;base64,'+${good.getValue()}}" />
+                        <br>
+                        <div class="card-body">
+                            <h5 class="card-title" th:utext="${good.getKey().name}"></h5>
+                            <p class="card-text" th:utext="${good.getKey().description}"></p>
+                            <p class="card-text" th:utext="${good.getKey().price}"></p>
+                            <button type="button" id="good-page-button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModal">Страница товара
+                            </button>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal TV -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="d-flex justify-content-center">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card text-lg-center" style="width: 18rem;">
+                        <img class="card-img-top" th:src="@{/showcasePictures/tv.png}" alt="Card image cap">
+                        <br>
+                        <div class="card-body">
+
+
+                            <h5 class="card-title" id="name" name="name"></h5>
+                            <p class="card-text" id="description"></p>
+                            <p class="card-text" id="price"></p>
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModal">Страница товара
+                            </button>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+
+</body>
+</html>

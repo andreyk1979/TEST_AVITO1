@@ -28,4 +28,5 @@ public class ShopDto {
     private CityDto location;
     private Long userId;
     private List<Long> couponIds;
+    private AddressDto addressDetails; // информация по адресу, чтобы направлять post запросы на создание + иметь больше инфо по адресу
 }

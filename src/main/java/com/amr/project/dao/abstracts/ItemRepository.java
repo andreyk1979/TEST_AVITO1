@@ -1,6 +1,5 @@
 package com.amr.project.dao.abstracts;
 
-
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,4 +8,7 @@ import java.util.List;
 public interface ItemRepository<Item, Long> extends ReadWriteDao<Item, Long> {
 
     List<Item> getFourMostPopularItem();
+
+    void isPretendedToBeDeleted(Long id);
 }
+

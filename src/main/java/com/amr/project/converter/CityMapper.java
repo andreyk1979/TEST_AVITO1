@@ -5,14 +5,15 @@ import com.amr.project.model.entity.City;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 
-@Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CityMapper {
-    @Mapping(target = "countryName", source = "country.name")
-    @Mapping(target = "countryId", source = "country.id")
+
+    @Mapping(source = "country.name", target = "countryName")
+    @Mapping(source = "country.id", target = "countryId")
     CityDto toDto(City city);
 
-    City toModel(CityDto cityDtoDto);
+    @Mapping(source = "cityDto.countryName", target = "country.name")
+    @Mapping(source = "cityDto.countryId", target = "country.id")
+    City toModel(CityDto cityDto);
 }

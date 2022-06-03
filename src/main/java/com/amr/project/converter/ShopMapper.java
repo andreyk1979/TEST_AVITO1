@@ -26,6 +26,8 @@ public interface ShopMapper {
     @Mapping(target = "location", source = "address.city")
     ShopDto toDto(Shop shop);
 
+    @Mapping(target = "address", source = "shopDto.addressDetails")
+    @Mapping(target = "user.id", source = "shopDto.userId")
     Shop toModel(ShopDto shopDto);
 
     List<ShopDto> toDtoList(List<Shop> shopList);
