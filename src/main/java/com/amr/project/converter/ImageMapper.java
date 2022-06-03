@@ -12,5 +12,6 @@ public interface ImageMapper {
 
     ImageDto toDto(Image image);
 
+    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Image toModel(ImageDto imageDto);
 }

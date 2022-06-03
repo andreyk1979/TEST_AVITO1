@@ -12,4 +12,3 @@ public interface CountryMapper {
 
     Country toModel(CountryDto countryDto);
 }
-
