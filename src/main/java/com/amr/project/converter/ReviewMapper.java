@@ -14,6 +14,7 @@ public interface ReviewMapper {
 
     @Mapping(target = "itemId", source = "item.id")
     @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userName", source = "user.name")
     @Mapping(target = "shopId", source = "shop.id")
     @Mapping(target = "date", expression = "java(review.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())")
     ReviewDto toDto(Review review);
