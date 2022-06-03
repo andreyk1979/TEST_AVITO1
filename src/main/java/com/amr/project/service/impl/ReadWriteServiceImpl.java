@@ -2,17 +2,14 @@ package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.ReadWriteDao;
 import com.amr.project.service.abstracts.ReadWriteService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
-
 public class ReadWriteServiceImpl<T, K> implements ReadWriteService<T, K> {
 
-    private final ReadWriteDao<T, K> dao;
+    protected final ReadWriteDao<T, K> dao;
 
     public ReadWriteServiceImpl(ReadWriteDao<T, K> dao) {
         this.dao = dao;

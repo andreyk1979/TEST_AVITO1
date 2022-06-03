@@ -1,26 +1,25 @@
 package com.amr.project.converter;
 
-import com.amr.project.model.dto.CityDto;
-import com.amr.project.model.dto.ShopDto;
-import com.amr.project.model.entity.City;
-import com.amr.project.model.entity.Coupon;
-import com.amr.project.model.entity.Shop;
-import com.amr.project.model.entity.User;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import com.amr.project.model.dto.*;
+import com.amr.project.model.entity.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring",uses = {AddressMapper.class,CityMapper.class})
 public interface ShopMapper {
-    ShopMapper INSTANCE = Mappers.getMapper(ShopMapper.class);
 
-    @Mapping(target = "id", source = "shop.id")
-    @Mapping(target = "name", source = "shop.name")
+    @Mapping(target = "addressDetails", source = "shop.address")
+    @Mapping(target = "location", source = "shop.address.city")
     @Mapping(target = "userId", source = "shop.user.id")
-    @Mapping(target = "location", source = "cityDto")
-    @Mapping(target = "couponIds", source = "coupons")
-    ShopDto toDto(Shop shop, CityDto cityDto, List<Long> coupons);
+    ShopDto toDto (Shop shop);
 
+    @Mapping(target = "address", source = "shopDto.addressDetails")
+    @Mapping(target = "user.id", source = "shopDto.userId")
+    Shop toModel(ShopDto shopDto);
 
+    List<ShopDto> toDtoList(List<Shop> shopList);
+
+    List<Shop> toModelList(List<ShopDto> shopDtoList);
 }
