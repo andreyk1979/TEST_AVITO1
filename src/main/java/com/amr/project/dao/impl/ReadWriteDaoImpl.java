@@ -1,6 +1,7 @@
 package com.amr.project.dao.impl;
 
 import com.amr.project.dao.abstracts.ReadWriteDao;
+import org.springframework.stereotype.Repository;
 import com.amr.project.model.entity.Item;
 
 import javax.persistence.EntityManager;
@@ -20,7 +21,6 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
-
 
     @Override
     public void persist(T entity) {
