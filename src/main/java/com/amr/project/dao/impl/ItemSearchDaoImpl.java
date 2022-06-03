@@ -1,13 +1,13 @@
 package com.amr.project.dao.impl;
 
-import com.amr.project.dao.abstracts.ItemDao;
+import com.amr.project.dao.abstracts.ItemSearchDao;
 import com.amr.project.model.entity.Item;
 import org.springframework.stereotype.Repository;
 import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-public class ItemDaoImpl extends ReadWriteDaoImpl<Item, Long> implements ItemDao<Item, Long> {
+public class ItemSearchDaoImpl extends ReadWriteDaoImpl<Item, Long> implements ItemSearchDao<Item, Long> {
 
     @Override
     public List<Item> findItemList(String name) {
