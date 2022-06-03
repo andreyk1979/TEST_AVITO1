@@ -4,6 +4,7 @@ import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.entity.Item;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -14,7 +15,6 @@ public interface ItemMapper {
 
     ItemDto toDto(Item item);
 
-    //TODO возврат моделей нужно реализовать @Mapping если нужен
     Item toModel(ItemDto itemDto);
 
     List<ItemDto> toDtoList(List<Item> itemList);
