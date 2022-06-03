@@ -1,21 +1,24 @@
 package com.amr.project.service.impl;
 
-import com.amr.project.dao.abstracts.ItemDao;
-import com.amr.project.dao.abstracts.UserDao;
+import com.amr.project.dao.abstracts.ItemRepository;
+import com.amr.project.dao.abstracts.ReadWriteDao;
 import com.amr.project.model.entity.Item;
-import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.ItemService;
-import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ItemServiceImpl extends ReadWriteServiceImpl<Item,Long> implements ItemService {
+public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements ItemService {
 
-    private ItemDao itemDao;
+    protected final ItemRepository<Item, Long> itemRepository;
 
     @Autowired
-    public ItemServiceImpl(ItemDao itemDao) {
-        super(itemDao);
+    public ItemServiceImpl(ReadWriteDao<Item, Long> dao, ItemRepository<Item, Long> itemRepository) {
+        super(dao);
+        this.itemRepository = itemRepository;
+    }
+
+    @Override
+    public void isPretendedToBeDeleted(Long id) {
+
+        itemRepository.isPretendedToBeDeleted(id);
     }
 }
