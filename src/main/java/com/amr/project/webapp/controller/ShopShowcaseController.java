@@ -55,7 +55,7 @@ public class ShopShowcaseController {
 
         }
         model.addAttribute("popularItems",itemsForModel);
-        return "index";
+        return "showcase";
     }
 
 }
