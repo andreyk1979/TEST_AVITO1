@@ -13,7 +13,8 @@ public interface CityMapper {
     @Mapping(source = "country.id", target = "countryId")
     CityDto toDto(City city);
 
-    @Mapping(source = "cityDto.countryName", target = "country.name")
-    @Mapping(source = "cityDto.countryId", target = "country.id")
+    @Mapping(source = "countryName", target = "country.name")
+    @Mapping(source = "countryId", target = "country.id")
     City toModel(CityDto cityDto);
 }
+

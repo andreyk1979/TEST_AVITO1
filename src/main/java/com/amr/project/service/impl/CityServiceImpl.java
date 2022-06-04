@@ -1,11 +1,8 @@
 package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.CityDao;
-import com.amr.project.dao.abstracts.UserDao;
 import com.amr.project.model.entity.City;
-import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.CityService;
-import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,13 @@
 package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.ItemDao;
-import com.amr.project.dao.abstracts.ReadWriteDao;
 import com.amr.project.dao.abstracts.ShopDao;
 import com.amr.project.model.entity.Item;
 import com.amr.project.model.entity.Shop;
 import com.amr.project.service.abstracts.ShopShowcaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
