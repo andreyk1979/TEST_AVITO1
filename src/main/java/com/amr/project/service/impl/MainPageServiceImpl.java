@@ -5,7 +5,7 @@ import com.amr.project.converter.ItemMapper;
 import com.amr.project.converter.ShopMapper;
 import com.amr.project.dao.abstracts.ItemDao;
 import com.amr.project.dao.abstracts.ShopDao;
-import com.amr.project.dao.impl.CategoryRepositoryImpl;
+import com.amr.project.dao.impl.CategoryDaoImpl;
 import com.amr.project.model.dto.MainPageDto;
 import com.amr.project.service.abstracts.MainPageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MainPageServiceImpl implements MainPageService {
-    private final CategoryRepositoryImpl categoryRepository;
+    private final CategoryDaoImpl categoryRepository;
     private final ItemDao itemRepository;
     private final ShopDao shopRepository;
 
@@ -24,7 +24,7 @@ public class MainPageServiceImpl implements MainPageService {
 
 
     @Autowired
-    public MainPageServiceImpl(CategoryRepositoryImpl categoryRepository, ItemMapper itemMapper,
+    public MainPageServiceImpl(CategoryDaoImpl categoryRepository, ItemMapper itemMapper,
                                ShopMapper shopMapper, CategoryMapper categoryMapper, ItemDao itemRepository, ShopDao shopRepository) {
         this.itemRepository = itemRepository;
         this.shopRepository = shopRepository;
