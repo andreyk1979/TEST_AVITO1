@@ -1,6 +1,5 @@
 package com.amr.project.dao.abstracts;
 
-
 import org.springframework.stereotype.Repository;
 
 @Repository

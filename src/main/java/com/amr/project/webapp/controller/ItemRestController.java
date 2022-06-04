@@ -6,7 +6,6 @@ import com.amr.project.model.entity.Item;
 import com.amr.project.service.abstracts.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class ItemRestController {
     @Autowired
     public ItemRestController(ItemService itemService, ItemMapper itemMapper) {
         this.itemService = itemService;
-        this. itemMapper = itemMapper;
+        this.itemMapper = itemMapper;
     }
 
     @GetMapping()
@@ -41,12 +40,12 @@ public class ItemRestController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemDto createItem(@RequestBody ItemDto itemDto){
-        return itemMapper.toDto(itemService.persist(itemMapper.toItem(itemDto)));
+        return itemMapper.toDto(itemService.persist(itemMapper.toModel(itemDto)));
     }
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public void updateItem(@RequestBody ItemDto itemDto) {
-        Item item = itemMapper.toItem(itemDto);
+        Item item = itemMapper.toModel(itemDto);
         itemService.update(item);
     }
 
@@ -62,12 +61,12 @@ public class ItemRestController {
         itemService.isPretendedToBeDeleted(id);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    //@Secured("ROLE_ADMIN")
-    //Снять коментарий после включения security
-    public void deleteItem(@PathVariable Long id) {
-        itemService.deleteByIdCascadeEnable(id);
-    }
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    //@Secured("ROLE_ADMIN")
+//    //Снять коментарий после включения security
+//    public void deleteItem(@PathVariable Long id) {
+//        itemService.deleteByIdCascadeEnable(id);
+//    }
 
 }

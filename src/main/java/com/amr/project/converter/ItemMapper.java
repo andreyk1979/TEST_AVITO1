@@ -4,7 +4,6 @@ import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.entity.Item;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 import java.util.List;
 

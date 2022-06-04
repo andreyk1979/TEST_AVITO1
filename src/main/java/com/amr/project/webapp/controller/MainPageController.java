@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainPageController {
-    @Autowired
-    private MainPageService mainPageService;
+
+    private final MainPageService mainPageService;
+
+    public MainPageController(MainPageService mainPageService) {
+        this.mainPageService = mainPageService;
+    }
 
     @GetMapping("/")
     public String getMainPage(Model model) {

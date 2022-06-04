@@ -1,12 +1,10 @@
 package com.amr.project.converter;
 
-
 import com.amr.project.model.dto.UserDto;
 import com.amr.project.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
