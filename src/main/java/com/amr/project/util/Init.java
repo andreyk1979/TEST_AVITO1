@@ -49,7 +49,7 @@ public class Init {
         entityManager.close();
     }
 
-    public void createUser(EntityManager entityManager) {
+    private void createUser(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         User user = new User();
         User user2 = new User();
@@ -59,12 +59,18 @@ public class Init {
         user.setPassword("cats");
         user.setActivate(true);
         user2.setActivate(true);
+        List<Image> listImagesForUser = new ArrayList<>();
+        listImagesForUser.add(entityManager.find(Image.class, 29L));
+        user.setImages(listImagesForUser);
+        List<Image> listImagesForUser2 = new ArrayList<>();
+        listImagesForUser2.add(entityManager.find(Image.class, 30L));
+        user2.setImages(listImagesForUser2);
         entityManager.persist(user);
         entityManager.persist(user2);
         entityManager.getTransaction().commit();
     }
 
-    public void createCountry(EntityManager entityManager) {
+    private void createCountry(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Country country = new Country();
         country.setName("Россия");
@@ -72,7 +78,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createPersonalData(EntityManager entityManager) {
+    private void createPersonalData(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         PersonalData personalData = new PersonalData();
         personalData.setPlaceOfBirth("Санкт-Петербург");
@@ -83,8 +89,12 @@ public class Init {
         dateOfPersonalData.setTime(12L);
         personalData.setDateOfIssue(dateOfPersonalData);
         personalData.setStatus(PersonalDataStatus.CONFIRMED);
+        List<Image> listOfPersonalDataImages = new ArrayList<>();
+        listOfPersonalDataImages.add(entityManager.find(Image.class, 31L));
+        personalData.setListOfImages(listOfPersonalDataImages);
         entityManager.persist(personalData);
         entityManager.getTransaction().commit();
+
         entityManager.getTransaction().begin();
         PersonalData personalData2 = new PersonalData();
         personalData2.setPlaceOfBirth("Москва");
@@ -95,11 +105,14 @@ public class Init {
         dateOfPersonalData2.setTime(15L);
         personalData2.setDateOfIssue(dateOfPersonalData2);
         personalData2.setStatus(PersonalDataStatus.CONFIRMED);
+        List<Image> listOfPersonalDataImages2 = new ArrayList<>();
+        listOfPersonalDataImages2.add(entityManager.find(Image.class, 32L));
+        personalData2.setListOfImages(listOfPersonalDataImages2);
         entityManager.persist(personalData2);
         entityManager.getTransaction().commit();
     }
 
-    public void createCity(EntityManager entityManager) {
+    private void createCity(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         City city = new City();
         city.setName("Санкт-Петерубрг");
@@ -112,7 +125,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createAddress(EntityManager entityManager) {
+    private void createAddress(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Address address = new Address();
         address.setHouse("54а");
@@ -135,7 +148,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void updateUsers(EntityManager entityManager) {
+    private void updateUsers(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Address addressForUserFromDB = entityManager.find(Address.class, 1L);
         User userFromDB = entityManager.find(User.class, 1L);
@@ -154,22 +167,22 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createShop(EntityManager entityManager) {
+    private void createShop(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Shop shop = new Shop();
         shop.setAddress(entityManager.find(Address.class, 3L));
         shop.setName("Samsung");
-        //shop.setLogo(entityManager.find(Image.class, 1L));
         shop.setEmail("samsung@gmail.com");
         shop.setPhone("88002528282");
         shop.setDescription("Официальный магазин Samsung");
         shop.setRating(8.99D);
         shop.setUser(entityManager.find(User.class, 2L));
+        shop.setLogo(entityManager.find(Image.class, 1L));
         entityManager.persist(shop);
         entityManager.getTransaction().commit();
     }
 
-    public void createUserInfo(EntityManager entityManager) {
+    private void createUserInfo(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(entityManager.find(User.class, 1L));
@@ -192,10 +205,23 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createItems(EntityManager entityManager) {
+    private void createItems(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+        List<Image> imagesOfItem1 = new ArrayList<>();
+        for (long i = 20L; i < 23L; i++) {
+            imagesOfItem1.add(entityManager.find(Image.class, i));
+        }
+        List<Image> imagesOfItem2 = new ArrayList<>();
+        for (long i = 23L; i < 26L; i++) {
+            imagesOfItem2.add(entityManager.find(Image.class, i));
+        }
+        List<Image> imagesOfItem3 = new ArrayList<>();
+        for (long i = 26L; i < 29L; i++) {
+            imagesOfItem3.add(entityManager.find(Image.class, i));
+        }
         Item tv1 = new Item();
         tv1.setShop(entityManager.find(Shop.class, 1L));
+        tv1.setImages(imagesOfItem1);
         tv1.setCount(10);
         tv1.setName("32\" Телевизор Samsung UE32T4500AU LED, черный");
         tv1.setDescription("Технология PurColor");
@@ -223,6 +249,7 @@ public class Init {
 
         Item tv2 = new Item();
         tv2.setShop(entityManager.find(Shop.class, 1L));
+        tv2.setImages(imagesOfItem2);
         tv2.setCount(15);
         tv2.setCategory(entityManager.find(Category.class, 1L));
         tv2.setName("65\" Телевизор Samsung UE65AU7002U, черный");
@@ -249,6 +276,7 @@ public class Init {
 
         Item tv3 = new Item();
         tv3.setShop(entityManager.find(Shop.class, 1L));
+        tv3.setImages(imagesOfItem3);
         tv3.setName("40\" Телевизор Samsung UE40T5300 2020 HDR, LED, черный");
         tv3.setDescription("Технология PurColor");
         tv3.setCategory(entityManager.find(Category.class, 1L));
@@ -272,9 +300,22 @@ public class Init {
         tv3.setReviews(listReviewsOfItem3);
         entityManager.persist(tv3);
 
+        List<Image> listOfImagesPhoneItem1 = new ArrayList<>();
+        for (long i = 11; i < 14; i++) {
+            listOfImagesPhoneItem1.add(entityManager.find(Image.class, i));
+        }
+        List<Image> listOfImagesPhoneItem2 = new ArrayList<>();
+        for (long i = 14; i < 17; i++) {
+            listOfImagesPhoneItem2.add(entityManager.find(Image.class, i));
+        }
+        List<Image> listOfImagesPhoneItem3 = new ArrayList<>();
+        for (long i = 17; i < 20; i++) {
+            listOfImagesPhoneItem3.add(entityManager.find(Image.class, i));
+        }
         Item itemPhone1 = new Item();
         itemPhone1.setCount(25);
         itemPhone1.setCategory(entityManager.find(Category.class, 2L));
+        itemPhone1.setImages(listOfImagesPhoneItem1);
         itemPhone1.setName("Galaxy S22 Ultra");
         itemPhone1.setDescription("Встречайте Galaxy S22 Ultra с мощью Note. Его тонкий алюминиевый корпус впечатляет своей совершенной формой!");
         itemPhone1.setRating(9.3);
@@ -300,6 +341,7 @@ public class Init {
 
         Item itemPhone2 = new Item();
         itemPhone2.setUser(entityManager.find(User.class, 2L));
+        itemPhone2.setImages(listOfImagesPhoneItem2);
         itemPhone2.setShop(entityManager.find(Shop.class, 1L));
         itemPhone2.setCategory(entityManager.find(Category.class, 2L));
         itemPhone2.setDescription("С видео 8K и функцией 8K Video Snap, Galaxy S20, S20+ и S20 Ultra изменят ваш взгляд на фото- и видеосъемку.");
@@ -325,6 +367,7 @@ public class Init {
 
         Item itemPhone3 = new Item();
         itemPhone3.setUser(entityManager.find(User.class, 2L));
+        itemPhone3.setImages(listOfImagesPhoneItem3);
         itemPhone3.setShop(entityManager.find(Shop.class,1L));
         itemPhone3.setCategory(entityManager.find(Category.class, 2L));
         itemPhone3.setDescription("Samsung не перестаёт покорять сердца пользователей и выпускает новый смартфон - Samsung Galaxy A52");
@@ -348,8 +391,21 @@ public class Init {
         itemPhone3.setReviews(reviewOfItemPhone3);
         entityManager.persist(itemPhone3);
 
+        List<Image> listOfImagesHeadPhoneItem1 = new ArrayList<>();
+        for (long i = 2; i < 5; i++) {
+            listOfImagesHeadPhoneItem1.add(entityManager.find(Image.class, i));
+        }
+        List<Image> listOfImagesHeadPhoneItem2 = new ArrayList<>();
+        for (long i = 5; i < 8; i++) {
+            listOfImagesHeadPhoneItem2.add(entityManager.find(Image.class, i));
+        }
+        List<Image> listOfImagesHeadPhoneItem3 = new ArrayList<>();
+        for (long i = 8; i < 11; i++) {
+            listOfImagesHeadPhoneItem3.add(entityManager.find(Image.class, i));
+        }
         Item headPhone = new Item();
         headPhone.setUser(entityManager.find(User.class, 2L));
+        headPhone.setImages(listOfImagesHeadPhoneItem1);
         headPhone.setShop(entityManager.find(Shop.class,1L));
         headPhone.setCategory(entityManager.find(Category.class, 3L));
         headPhone.setDescription("Элегантные наушники Galaxy Buds Live приковывают к себе взгляды, даже когда находятся у вас в ушах.");
@@ -375,6 +431,7 @@ public class Init {
 
         Item headPhone2 = new Item();
         headPhone2.setUser(entityManager.find(User.class, 2L));
+        headPhone2.setImages(listOfImagesHeadPhoneItem2);
         headPhone2.setShop(entityManager.find(Shop.class,1L));
         headPhone2.setCategory(entityManager.find(Category.class, 3L));
         headPhone2.setDescription("Это беспроводные наушники с технологиями профессионального уровня, обеспечивающими невероятное погружение в захватывающий звук.");
@@ -400,6 +457,7 @@ public class Init {
 
         Item headPhone3 = new Item();
         headPhone3.setUser(entityManager.find(User.class, 2L));
+        headPhone3.setImages(listOfImagesHeadPhoneItem3);
         headPhone3.setShop(entityManager.find(Shop.class,1L));
         headPhone3.setCategory(entityManager.find(Category.class, 3L));
         headPhone3.setDescription("Чистый и реалистичный звук от самых высоких нот до самых глубоких басов благодаря специально разработанным двухполосным динамикам со звуком от специалистов AKG.");
@@ -424,7 +482,7 @@ public class Init {
         entityManager.persist(headPhone3);
         entityManager.getTransaction().commit();
     }
-    public void createCategories(EntityManager entityManager) {
+    private void createCategories(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Category tvCategory = new Category();
         tvCategory.setName("Телевизоры");
@@ -448,7 +506,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createFeedback(EntityManager entityManager) {
+    private void createFeedback(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Feedback feedback = new Feedback();
         feedback.setShop(entityManager.find(Shop.class, 1L));
@@ -461,7 +519,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createFavorites(EntityManager entityManager) {
+    private void createFavorites(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Favorite favorite = new Favorite();
         List<Item> favorites = new ArrayList<>();
@@ -477,7 +535,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createOrders(EntityManager entityManager) {
+    private void createOrders(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Order order = new Order();
         order.setAddress(entityManager.find(Address.class, 1L));
@@ -503,7 +561,7 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    public void createCouponAndDiscount(EntityManager entityManager) {
+    private void createCouponAndDiscount(EntityManager entityManager) {
         entityManager.getTransaction().begin();
         Coupon coupon = new Coupon();
         coupon.setUser(entityManager.find(User.class, 2L));
@@ -517,6 +575,5 @@ public class Init {
         discount.setPercentage(3);
         entityManager.persist(discount);
         entityManager.getTransaction().commit();
-
     }
 }
