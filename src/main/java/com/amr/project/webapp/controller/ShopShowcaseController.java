@@ -24,7 +24,7 @@ public class ShopShowcaseController {
     private final ShopMapper shopMapper;
     private final ItemMapper itemMapper;
     private final ShopShowcaseService shopShowcaseService;
-    private Map<ItemDto,String> itemsForModel = new HashMap<>();
+    private Map<ItemDto,String> itemsForModel;
 
     @Autowired
     public ShopShowcaseController(ShopService shopService, ShopMapper shopMapper, ShopShowcaseService shopShowcaseService,ItemMapper itemMapper) {
@@ -36,6 +36,7 @@ public class ShopShowcaseController {
 
     @GetMapping("/{id}")
     public String showShopShowcase (@PathVariable Long id, Model model) throws UnsupportedEncodingException {
+        itemsForModel = new HashMap<>();
         ShopDto shop = shopMapper.toDto(shopShowcaseService.getShopForShowcase(id));
         model.addAttribute("singleShop",shop);
 
