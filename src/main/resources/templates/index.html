@@ -24,6 +24,7 @@
         button:hover { background: #007598; }
         .default { background: #009898; }
     </style>
+
 </head>
 <body>
 
@@ -58,9 +59,9 @@
                 </li>
             </ul>
             <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Поиск товаров..."
+                <input class="form-control me-2"  input type="search" name="text" placeholder="Поиск товаров..."
                        aria-label="Поиск товаров..." size="50" style="height: 32px">
-                <button class="default" type="submit" style="height: 32px; width: 80px">Найти</button>
+                <button class="default" type="submit" onclick="" style="height: 32px; width: 80px">Найти</button>
             </form>
             <ul class="navbar-nav px-4">
                 <li class="nav-item text-nowrap">
@@ -76,104 +77,90 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="grid">
     <div class="row">
         <div class="col-2">
             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                <button type="button" class="default" href="#">Товары для дома</button>
-                <button type="button" class="default" href="#">Одежда</button>
-                <button type="button" class="default" href="#">Обувь</button>
-                <button type="button" class="default" href="#">Электроника</button>
-                <button type="button" class="default" href="#">Игрушки</button>
-                <button type="button" class="default" href="#">Продукты</button>
-                <button type="button" class="default" href="#">Бытовая техника</button>
-                <button type="button" class="default" href="#">Автотовары</button>
-                <button type="button" class="default" href="#">Мебель</button>
-                <button type="button" class="default" href="#">Зоотовары</button>
-                <button type="button" class="default" href="#">Сад и дача</button>
-                <button type="button" class="default" href="#">Спорт</button>
-                <button type="button" class="default" href="#">Книги</button>
+                <ul th:each="category : ${mainPageDto.getCategoryDto()}">
+                    <button type="button" class="default" href="#"><li th:text="${category.getName()}"></li></button>
+                </ul>
             </div>
         </div>
-        <div class="col-6">
-            <!-- Карусель товаров -->
-            <p class="h3">Подборка популярных товаров</p>
-            <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="5000">
-                        <img alt="tel1" src="tel1.jpg">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="2000">
-                        <img alt="tel2" src="tel2.png">
-                    </div>
-                    <div class="carousel-item">
-                        <img alt="tel1" src="tel3.jpg">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"  data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Предыдущий</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"  data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Следующий</span>
-                </button>
-            </div>
-        </div>
-        <div class="col-4">
-            <p class="h3">Новости</p>
-            <div class="card">
-                <div class="card-header">
-                    Новость1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <button type="button" class="default" href="#">Подробнее</button>
-                </div>
-                <div class="card-footer text-muted">
-                    2 days ago
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        Новость2
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <button type="button" class="default" href="#">Подробнее</button>
-                    </div>
-                    <div class="card-footer text-muted">
-                        3 days ago
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 
-<!-- Окно авторизации -->
-<div class="modal fade" id="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Окно авторизации</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="col-7">
+
+            <!-- Товары -->
+            <p class="h3">Подборка популярных товаров</p>
+            <div class="grid">
+                <div class="row">
+                    <div class="card-group">
+                        <ul th:each="item : ${mainPageDto.getItemDtoList()}">
+                            <div class="card">
+                                <div class="card-header">
+                                    <li th:text="${item.getName}"></li>
+                                </div>
+                                <div class="card-body">
+                                    <ul th:each="image : ${item.getImages}">
+                                        <img src="${shop.getLogo}" th:if="image.isMain">
+                                    </ul>
+                                    <p class="card-text"><li th:text="${item.getPrice}"></li></p>
+                                    <p class="card-text"><li th:text="${item.getDescription}"></li></p>
+                                    <button type="button" class="default" href="#">В корзину</button>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <input type="text" class="form-control" placeholder="Логин">
-            </div>
-            <div class="modal-body">
-                <input type="text" class="form-control" placeholder="Пароль">
-            </div>
-            <div class="modal-footer">
-                <div style="width:100%;">
-                    <div style="width:100%;">
-                        <div style="width:90%;float:left">
-                            <button type="button" class="default" href="#">Регистрация</button>
+
+        </div>
+    </div>
+
+
+    <!--Список магазинов-->
+
+    <div class="grid">
+        <div class="row">
+            <div class="card-group">
+                <ul th:each="shop : ${mainPageDto.getShopDtoList()}">
+                    <div class="card">
+                        <div class="card-header">
+                            <li th:text="${shop.getName}"></li>
                         </div>
-                        <div style="width:10%;float:right">
-                            <button type="button" class="default" href="#" style="width: 45px">ОК</button>
+                        <div class="card-body">
+                            <img src="${shop.getLogo}">
+                            <p class="card-text"><li th:text="${shop.getDescription}"></li></p>
+                            <button type="button" class="default" href="#">Перейти</button>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно авторизации -->
+    <div class="modal fade" id="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Окно авторизации</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="Логин">
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="Пароль">
+                </div>
+                <div class="modal-footer">
+                    <div style="width:100%;">
+                        <div style="width:100%;">
+                            <div style="width:90%;float:left">
+                                <button type="button" class="default" href="#">Регистрация</button>
+                            </div>
+                            <div style="width:10%;float:right">
+                                <button type="button" class="default" href="#" style="width: 45px">ОК</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,6 +168,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="index.js"></script>
 </body>
-</html>
 </html>
