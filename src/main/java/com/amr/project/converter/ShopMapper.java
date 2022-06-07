@@ -10,16 +10,18 @@ import java.util.stream.Collectors;
 
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {ReviewMapper.class, ImageMapper.class, DiscountMapper.class, CityMapper.class},
+        uses = {ReviewMapper.class, ImageMapper.class, DiscountMapper.class, CityMapper.class,AddressMapper.class},
         imports = {Coupon.class, Collectors.class})
 public interface ShopMapper {
 
+    @Mapping(target = "addressDetails", source = "shop.address")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "location", source = "address.city")
     @Mapping(target = "couponIds", expression = "java(shop.getCoupons().stream()" +
             ".map(Coupon::getId).collect(Collectors.toList()))")
     ShopDto toDto(Shop shop);
 
+    @Mapping(target = "address", source = "shopDto.addressDetails")
     Shop toModel(ShopDto shopDto);
 
     List<ShopDto> toDtoList(List<Shop> shopList);
