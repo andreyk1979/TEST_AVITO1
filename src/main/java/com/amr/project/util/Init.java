@@ -178,6 +178,8 @@ public class Init {
         shop.setRating(8.99D);
         shop.setUser(entityManager.find(User.class, 2L));
         shop.setLogo(entityManager.find(Image.class, 1L));
+        Image image = entityManager.find(Image.class, 1L);
+        image.setShop(shop);
         entityManager.persist(shop);
         entityManager.getTransaction().commit();
     }
