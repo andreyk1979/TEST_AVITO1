@@ -1,6 +1,6 @@
 package com.amr.project.model.dto.report;
 
-import com.amr.project.model.entity.Item;
+import com.amr.project.model.dto.ItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +25,5 @@ public class SalesHistoryDto {
     private BigDecimal price;       //Цена проданного товара в этот день ("= price" в таблице "item)
 
     //@JsonManagedReference
-    private Item item;
+    private ItemDto item;
 }
