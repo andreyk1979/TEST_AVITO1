@@ -1,7 +1,7 @@
 package com.amr.project.webapp.controller;
 
-import com.amr.project.model.dto.*;
 import com.amr.project.service.abstracts.ItemShopSearchService;
+import com.amr.project.model.dto.ItemShopDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
