@@ -2,8 +2,8 @@ package com.amr.project.webapp.controller;
 
 import com.amr.project.converter.ShopMapper;
 import com.amr.project.model.dto.ShopDto;
-import com.amr.project.model.entity.*;
 import com.amr.project.service.abstracts.*;
+import com.amr.project.model.entity.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
