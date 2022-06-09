@@ -87,13 +87,13 @@
             </div>
         </div>
 
-        <div class="col-7">
+        <div class="col-8">
 
             <!-- Товары -->
             <p class="h3">Подборка популярных товаров</p>
             <div class="grid">
                 <div class="row">
-                    <div class="card-group">
+                    <div class="row row-cols-1 row-cols-sm-2 g-3">
                         <ul th:each="item : ${mainPageDto.getItemDtoList()}">
                             <div class="card">
                                 <div class="card-header">
@@ -101,7 +101,9 @@
                                 </div>
                                 <div class="card-body">
                                     <ul th:each="image : ${item.getImages}">
-                                        <img src="${shop.getLogo}" th:if="image.isMain">
+                                        <td th:if="image.isMain">
+                                            <img src="image.getPicture">
+                                        </td>
                                     </ul>
                                     <p class="card-text"><li th:text="${item.getPrice}"></li></p>
                                     <p class="card-text"><li th:text="${item.getDescription}"></li></p>
