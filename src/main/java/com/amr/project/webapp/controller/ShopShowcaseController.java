@@ -6,6 +6,9 @@ import com.amr.project.service.abstracts.*;
 import com.amr.project.model.dto.ImageDto;
 import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.dto.ShopDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/shop")
+@Api(description ="Данный контроллер возвращает витрину конкретного магазина в виде отдельной HTML страницы")
 public class ShopShowcaseController {
 
     private final ShopService shopService;
@@ -37,7 +41,9 @@ public class ShopShowcaseController {
     }
 
     @GetMapping("/{id}")
-    public String showShopShowcase (@PathVariable Long id, Model model) throws UnsupportedEncodingException {
+    @ApiOperation(value = "Метод showShopShowcase", notes = "Метод showShopShowcase принимает Id магазина из БД " +
+            "и возращает html страницу showcase, которая содержит витрину магазина")
+    public String showShopShowcase (@ApiParam("Id магазина из БД") @PathVariable Long id, Model model) throws UnsupportedEncodingException {
         itemsForModel = new HashMap<>();
         ShopDto shop = shopMapper.toDto(shopShowcaseService.getShopForShowcase(id));
         model.addAttribute("singleShop",shop);
