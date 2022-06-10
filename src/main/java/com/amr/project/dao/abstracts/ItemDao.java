@@ -11,4 +11,6 @@ public interface ItemDao extends ReadWriteDao<Item, Long>{
     List<Item> getFourMostPopularItem();
 
     void isPretendedToBeDeleted(Long id);
+
+    List<Item> getItemForShop (Long shopId);
 }

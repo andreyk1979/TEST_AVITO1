@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Авито 2.0</title>
+    <script type="text/javascript" src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
+    <style>
+        button {
+            color: #fff;
+            border: 1px solid #014457;
+            border-radius: 5px;
+            width: 200px;
+            height:35px;
+            padding-top:0;
+            text-align:center;
+            vertical-align:center;
+        }
+        button:hover { background: #007598; }
+        .default { background: #009898; }
+    </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 36px">
+    <div class="container-fluid">
+        <img alt="Logo" src="logo.jpg" width="30" height="30">
+        <a class="navbar-brand" href="#" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
+            Авито 2.0</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic"
+                aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse show" id="navbarBasic">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Магазины</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Контакты</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Адреса</a></li>
+                        <li><a class="dropdown-item" href="#">Телефоны</a></li>
+                        <li><a class="dropdown-item" href="#">Something else</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2"  input type="search" name="text" placeholder="Поиск товаров..."
+                       aria-label="Поиск товаров..." size="50" style="height: 32px">
+                <button class="default" type="submit" onclick="" style="height: 32px; width: 80px">Найти</button>
+            </form>
+            <ul class="navbar-nav px-4">
+                <li class="nav-item text-nowrap">
+                    <button type="button" class="default" data-bs-toggle="modal" data-bs-target="#modal" style="height: 32px">Войти</button>
+                </li>
+            </ul>
+            <ul class="navbar-nav px-4">
+                <li class="nav-item text-nowrap">
+                    <button class="default" href="/logout" style="height: 32px; width: 80px">Выйти</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="grid">
+    <div class="row">
+        <div class="col-2">
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                <ul th:each="category : ${mainPageDto.getCategoryDto()}">
+                    <button type="button" class="default" href="#"><li th:text="${category.getName()}"></li></button>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-8">
+
+            <!-- Товары -->
+            <p class="h3">Подборка популярных товаров</p>
+            <div class="grid">
+                <div class="row">
+                    <div class="row row-cols-1 row-cols-sm-2 g-3">
+                        <ul th:each="item : ${mainPageDto.getItemDtoList()}">
+                            <div class="card">
+                                <div class="card-header">
+                                    <li th:text="${item.getName}"></li>
+                                </div>
+                                <div class="card-body">
+                                    <ul th:each="image : ${item.getImages}">
+                                        <td th:if="image.isMain">
+                                            <img src="image.getPicture">
+                                        </td>
+                                    </ul>
+                                    <p class="card-text"><li th:text="${item.getPrice}"></li></p>
+                                    <p class="card-text"><li th:text="${item.getDescription}"></li></p>
+                                    <button type="button" class="default" href="#">В корзину</button>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--Список магазинов-->
+    <p class="h3">Популярные магазины</p>
+    <div class="grid">
+        <div class="row">
+            <div class="card-group">
+                <ul th:each="shop : ${mainPageDto.getShopDtoList()}">
+                    <div class="card">
+                        <div class="card-header">
+                            <li th:text="${shop.getName}"></li>
+                        </div>
+                        <div class="card-body">
+                            <img src="${shop.getLogo}">
+                            <p class="card-text"><li th:text="${shop.getDescription}"></li></p>
+                            <button type="button" class="default" href="#">Перейти</button>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно авторизации -->
+    <div class="modal fade" id="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Окно авторизации</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="Логин">
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" placeholder="Пароль">
+                </div>
+                <div class="modal-footer">
+                    <div style="width:100%;">
+                        <div style="width:100%;">
+                            <div style="width:90%;float:left">
+                                <button type="button" class="default" href="#">Регистрация</button>
+                            </div>
+                            <div style="width:10%;float:right">
+                                <button type="button" class="default" href="#" style="width: 45px">ОК</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

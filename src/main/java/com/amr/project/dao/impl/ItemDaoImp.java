@@ -34,4 +34,11 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
         query.setParameter("param", shopId);
         return query.setMaxResults(2).getResultList();
     }
+
+    @Override
+    public List<Item> getItemForShop(Long shopId) {
+        Query query = em.createQuery("from Item where shop.id =:param order by rating DESC");
+        query.setParameter("param", shopId);
+        return query.getResultList();
+    }
 }
