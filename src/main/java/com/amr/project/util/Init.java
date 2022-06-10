@@ -569,6 +569,10 @@ public class Init {
         coupon.setUser(entityManager.find(User.class, 2L));
         coupon.setEnd(Calendar.getInstance());
         coupon.setStart(Calendar.getInstance());
+        List<Coupon> coupons = new ArrayList<>();
+        coupons.add(coupon);
+        Shop shop = entityManager.find(Shop.class, 1L);
+        shop.setCoupons(coupons);
         entityManager.persist(coupon);
         Discount discount = new Discount();
         discount.setShop(entityManager.find(Shop.class, 1L));
