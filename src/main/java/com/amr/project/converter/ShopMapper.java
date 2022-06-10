@@ -17,8 +17,8 @@ public interface ShopMapper {
     @Mapping(target = "addressDetails", source = "shop.address")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "location", source = "address.city")
-    @Mapping(target = "couponIds", expression = "java(shop.getCoupons().stream()" +
-            ".map(Coupon::getId).collect(Collectors.toList()))")
+    @Mapping(target = "couponIds", expression = "java(shop.getCoupons() != null ? shop.getCoupons().stream()" +
+            ".map(Coupon::getId).collect(Collectors.toList()) : null)")
     ShopDto toDto(Shop shop);
 
     @Mapping(target = "address", source = "shopDto.addressDetails")
