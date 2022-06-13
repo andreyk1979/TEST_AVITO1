@@ -22,4 +22,12 @@ public class ShopDaoImp extends ReadWriteDaoImpl<Shop, Long> implements ShopDao 
         return query.getResultList();
     }
 
+    @Override
+    public List<Shop> getShopsToBeModerated() {
+
+        Query query = em.createQuery("from Shop where is_moderated = false");
+        return query.getResultList();
+    }
 }
+
+

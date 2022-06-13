@@ -41,4 +41,10 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
         query.setParameter("param", shopId);
         return query.getResultList();
     }
+
+    @Override
+    public List<Item> getItemsToBeModerated() {
+
+        return em.createQuery("from Item where is_moderated = false").getResultList();
+    }
 }
