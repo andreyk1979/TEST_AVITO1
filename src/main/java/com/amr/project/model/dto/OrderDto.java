@@ -25,5 +25,6 @@ public class OrderDto {
     @Valid
     private AddressDto address;
     private Long userId;
-    private List<Long> itemIds;
+    private List<ItemDto> itemsInOrder;
+
 }

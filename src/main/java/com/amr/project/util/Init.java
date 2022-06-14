@@ -59,12 +59,8 @@ public class Init {
         user.setPassword("cats");
         user.setActivate(true);
         user2.setActivate(true);
-        List<Image> listImagesForUser = new ArrayList<>();
-        listImagesForUser.add(entityManager.find(Image.class, 29L));
-        user.setImages(listImagesForUser);
-        List<Image> listImagesForUser2 = new ArrayList<>();
-        listImagesForUser2.add(entityManager.find(Image.class, 30L));
-        user2.setImages(listImagesForUser2);
+        user.setImage(entityManager.find(Image.class, 29L));
+        user2.setImage(entityManager.find(Image.class, 30L));
         entityManager.persist(user);
         entityManager.persist(user2);
         entityManager.getTransaction().commit();
