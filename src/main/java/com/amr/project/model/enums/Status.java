@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Status {
     START,
-    COMPLETE,
     WAITING,
     PAID,
     SENT,

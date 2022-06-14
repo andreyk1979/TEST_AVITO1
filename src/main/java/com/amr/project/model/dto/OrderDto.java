@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class OrderDto {
     private Long id;
     private LocalDateTime date;
     private BigDecimal total;
+    @Valid
     private AddressDto address;
     private Long userId;
     private List<Long> itemIds;
