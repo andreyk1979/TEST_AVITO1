@@ -4,7 +4,7 @@ import com.amr.project.converter.GrandSalesMapper;
 import com.amr.project.converter.SalesDtoMapper;
 import com.amr.project.converter.SalesHistoryMapper;
 import com.amr.project.model.dto.report.GrandSalesDto;
-import com.amr.project.model.dto.report.SalesDto;
+import com.amr.project.model.dto.report.SalesHistoryDto;
 import com.amr.project.service.abstracts.SalesHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,35 +31,36 @@ public class SalesShopReportRestController {
         this.grandSalesMapper = grandSalesMapper;
     }
 
-    @GetMapping("/{id}/filterByDate")
-    public List<SalesDto> getSalesByVariousDates(@PathVariable Long id,
-                                       @RequestParam String date1,
-                                       @RequestParam String date2) {
-        return salesHistoryService.findSalesByVariousDates(id, date1, date2)
+    @GetMapping("/filterByDate/{id}/{date1}/{date2}")
+    public GrandSalesDto getSalesByVariousDates(@PathVariable Long id,
+                                       @PathVariable String date1,
+                                       @PathVariable String date2) {
+        return grandSalesMapper.toDto(salesHistoryService.findSalesByVariousDates(id, date1, date2)
                 .stream()
                 .map(e -> salesDtoMapper.toDto(salesHistoryMapper.toDto(e)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public List<SalesDto> getAllSales(@PathVariable Long id) {
+    public List<SalesHistoryDto> getAllSales(@PathVariable Long id) {
         return salesHistoryService.getListByShopIdFromOrders(id)
                 .stream()
-                .map(e -> salesDtoMapper.toDto(salesHistoryMapper.toDto(e)))
+                .map(salesHistoryMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}/filterByItem")
-    public GrandSalesDto getSalesByItemName(@PathVariable Long id, String itemName) {
+    @GetMapping("/{id}/{itemName}")
+    public GrandSalesDto getSalesByItemName(@PathVariable Long id,
+                                            @PathVariable String itemName) {
         return grandSalesMapper.toDto(salesHistoryService.findSalesByItem(itemName, id)
                 .stream()
                 .map(e -> salesDtoMapper.toDto(salesHistoryMapper.toDto(e)))
                 .collect(Collectors.toList()));
     }
 
-    @GetMapping("/{id}/date")
+    @GetMapping("/date/{id}/{date}")
     public GrandSalesDto getSalesByDate(@PathVariable Long id,
-                                        @RequestParam String date) {
+                                        @PathVariable String date) {
        return grandSalesMapper
                .toDto(salesHistoryService.findByDate(id,date)
                .stream()

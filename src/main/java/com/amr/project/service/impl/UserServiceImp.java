@@ -2,6 +2,7 @@ package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.UserDao;
 import com.amr.project.model.entity.User;
+import com.amr.project.service.abstracts.MailService;
 import com.amr.project.service.abstracts.UserService;
 import com.amr.project.webapp.config.MailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class UserServiceImp extends ReadWriteServiceImpl<User, Long> implements UserService {
     private final UserDao userDao;
 
-    private MailConfig mailConfig;
+    private MailService mailService;
 
     @Autowired
     public UserServiceImp(UserDao userDao) {
@@ -26,8 +27,8 @@ public class UserServiceImp extends ReadWriteServiceImpl<User, Long> implements 
     }
 
     @Autowired
-    public void setMailConfig(MailConfig mailConfig) {
-        this.mailConfig = mailConfig;
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
     }
 
     @Override
@@ -39,17 +40,8 @@ public class UserServiceImp extends ReadWriteServiceImpl<User, Long> implements 
     @Transactional
     public boolean verifyUserBySecret(User user) {
         user.setActivationCode(String.valueOf(UUID.randomUUID()));
-        try {
-            MimeMessage message = mailConfig.getMailSender().createMimeMessage();
-            message.setSubject("Signing in Avito 2.0");
-            message.setText("Your code is - " + user.getActivationCode());
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-            mailConfig.getMailSender().send(message);
-            dao.update(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        mailService.send(user.getEmail(), "Signing in Avito 2.0", "Your code is - \n" + user.getActivationCode());
+        dao.update(user);
+        return true;
     }
 }

@@ -4,6 +4,8 @@ import com.amr.project.service.abstracts.MainPageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainPageController {
@@ -19,5 +21,9 @@ public class MainPageController {
         model.addAttribute(mainPageService.getMainPageDto());
         return "index";
     }
-
+    @GetMapping("/sales")
+    public String getSalesHistory(@RequestParam Long id, Model model) {
+        model.addAttribute("shopId", id);
+        return "salesHistory";
+    }
 }
