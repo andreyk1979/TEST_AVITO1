@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="row">
+    <div class="col-md-2">
+        <br>
+        <br>
+
+        <ul class="nav flex-column nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-shops-tab" data-toggle="pill" href="#shops-pill" role="tab"
+                   aria-controls="pills-shops" aria-selected="true">Магазины   <span class="badge badge-danger" th:utext="${shopsForModeration.size()}"></span>
+                    <span class="sr-only">непрочитанные сообщения</span></a>
+
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-goods-tab" data-toggle="pill" href="#goods-pill" role="tab"
+                   aria-controls="pills-goods" aria-selected="false">Товары   <span class="badge badge-danger" th:utext="${itemsForModeration.size()}"></span>
+                    <span class="sr-only">непрочитанные сообщения</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-comments-tab" data-toggle="pill" href="#comments-pill" role="tab"
+                   aria-controls="pills-comments" aria-selected="false">Отзывы   <span class="badge badge-danger" th:utext="${reviewsForModeration.size()}"></span>
+                    <span class="sr-only">непрочитанные сообщения</span></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-md-10" style="height:100vh;background-color:#f8f8f8">
+
+        <div class="tab-content">
+
+
+            <div class="tab-pane active" id="shops-pill" role="tabpanel" aria-labelledby="pills-shops-tab">
+
+                <div class="row">
+                    <div class="col-md-4" th:each="shop : ${shopsForModeration}">
+                        <div class="card text-lg-center" style="width: 18rem;">
+                            <br>
+                            <div class="card-body">
+                                <form th:method="POST"
+                                      th:action="@{/moderation/accept_shop/{id}(id=${shop.getKey().id})}">
+                                    <h5 class="card-title" th:utext="${shop.getKey().name}"></h5>
+                                    <img th:src="@{'data:image/jpeg;base64,'+${shop.getValue()}}"/>
+
+                                    <br>
+                                    <br>
+
+                                    <button type="submit" id="accept-shop"
+                                            class="btn btn-success">Одобрить
+                                    </button>
+
+                                </form>
+                                <br>
+
+                                <button type="button" id="decline-shop" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#shopModal">Отклонить
+                                </button>
+
+                                <!-- Modal Reason -->
+                                <div class="modal fade" id="shopModal" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                                    <div class="d-flex justify-content-center">
+
+                                        <form th:method="POST"
+                                              th:action="@{/moderation/decline_shop/{id}(id=${shop.getKey().id})}"
+                                              th:object="${reason_shop}">
+
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="recipient-name" class="col-form-label">Причина
+                                                                отказа:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="other-name"
+                                                                   th:field="*{description}">
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+
+                                                        <button type="submit" value="Save" class="btn-outline-primary">
+                                                            ОК
+                                                        </button>
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab-pane" id="goods-pill" role="tabpanel" aria-labelledby="pills-goods-tab">
+
+                <div class="row">
+                    <div class="col-md-4" th:each="item : ${itemsForModeration}">
+                        <div class="card text-lg-center" style="width: 18rem;">
+                            <br>
+                            <div class="card-body">
+                                <form th:method="POST"
+                                      th:action="@{/moderation/accept_item/{id}(id=${item.getKey().id})}">
+                                    <h5 class="card-title" th:utext="${item.getKey().name}"></h5>
+                                    <img th:src="@{'data:image/jpeg;base64,'+${item.getValue()}}"/>
+
+                                    <br>
+                                    <br>
+
+                                    <button type="submit" id="accept-item"
+                                            class="btn btn-success">Одобрить
+                                    </button>
+
+                                </form>
+                                <br>
+
+                                <button type="button" id="decline-item" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#itemModal">Отклонить
+                                </button>
+
+                                <!-- Modal Reason -->
+                                <div class="modal fade" id="itemModal" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                                    <div class="d-flex justify-content-center">
+
+                                        <form th:method="POST"
+                                              th:action="@{/moderation/decline_item/{id}(id=${item.getKey().id})}"
+                                              th:object="${reason_item}">
+
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="recipient-name" class="col-form-label">Причина
+                                                                отказа:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="another-name"
+                                                                   th:field="*{description}">
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+
+                                                        <button type="submit" value="Save" class="btn-outline-primary">
+                                                            ОК
+                                                        </button>
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="tab-pane" id="comments-pill" role="tabpanel" aria-labelledby="pills-comments-tab">
+
+                <div class="row" th:each="review : ${reviewsForModeration}">
+
+                    <div class="col-md-8">
+                        <div class="card text-lg-left" style="width: 78rem; padding: 20px 25px;">
+
+
+                            <br>
+                            <div class="card-body">
+                                <form th:method="POST" th:action="@{/moderation/accept_review/{id}(id=${review.id})}">
+                                    <h5 class="card-title" th:utext="${review.text}"></h5>
+
+                                    <br>
+                                    <br>
+
+                                    <button type="submit" id="accept-review"
+                                            class="btn btn-success">Одобрить
+                                    </button>
+
+                                </form>
+                                <br>
+                                <button type="button" id="decline-review" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#reviewModal">Отклонить
+                                </button>
+
+                                <!-- Modal Reason -->
+                                <div class="modal fade" id="reviewModal" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                                    <div class="d-flex justify-content-center">
+
+                                        <form th:method="POST"
+                                              th:action="@{/moderation/decline_review/{id}(id=${review.id})}"
+                                              th:object="${reason_review}">
+
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="recipient-name" class="col-form-label">Причина
+                                                                отказа:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="recipient-name"
+                                                                   th:field="*{text}">
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+
+                                                        <button type="submit" value="Save" class="btn-outline-primary">
+                                                            ОК
+                                                        </button>
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+
+
+</body>
+</html>
+
+
+

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ImageDaoImp extends ReadWriteDaoImpl<Image, Long> implements ImageDao {
+
 }
