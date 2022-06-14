@@ -30,7 +30,7 @@ public class UserDto {
     private Gender gender;
     private LocalDate birthday;
     private String secret;
-    private List<AddressDto> addresses;
+    private AddressDto address;
     private ImageDto image;
     private List<Long> couponIds;
     private List<Long> orderIds;
