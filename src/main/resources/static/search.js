@@ -3,15 +3,20 @@ async function test() {
     let ins = input.value
     let data = await fetch("/api/search/" + ins)
 
+    let searcharea = ``
+    let itemSearchResult = ``
+    let shopSearchResult = ``
 
     try {
         json = await data.json()
     } catch (e) {
 
         document.querySelector("#main").innerHTML = `НИЧЕГО НЕ НАЙДЕНО`
+        document.querySelector("#itemsearcharea").innerHTML = itemSearchResult
+        document.querySelector("#shopsearcharea").innerHTML = shopSearchResult
     }
 
-    let searcharea = `<div class="container-fluid">
+    searcharea = `<div class="container-fluid">
 <div class="row">
 <div class="col-md-6" id="itemsearcharea">
 </div>
@@ -19,12 +24,9 @@ async function test() {
 </div>
 </div>
 </div>`
-    let itemSearchResult = ``
-    let shopSearchResult = ``
 
     itemSearchResult = `Товаров найдено: ${json.itemDtoList.length}`
     shopSearchResult = `Магазинов найдено: ${json.shopDtoList.length}`
-
 
     json.itemDtoList.forEach(item => {
         itemSearchResult += `<a href="#" class="list-group-item list-group-item-action">
@@ -53,6 +55,8 @@ async function test() {
     document.querySelector("#itemsearcharea").innerHTML = itemSearchResult
     document.querySelector("#shopsearcharea").innerHTML = shopSearchResult
     json = ''
-
 }
 
+$("#sb").on('input keyup', function () {
+    test()
+});
