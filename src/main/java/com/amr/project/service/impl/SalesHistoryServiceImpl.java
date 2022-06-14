@@ -21,7 +21,7 @@ public class SalesHistoryServiceImpl implements SalesHistoryService {
 
     @Override
     public List<SalesHistory> findSalesByVariousDates(Long idOfShop, String dateAfter, String dateBefore) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date1;
         Date date2;
         Calendar calendar1;
@@ -50,12 +50,25 @@ public class SalesHistoryServiceImpl implements SalesHistoryService {
 
     @Override
     public List<SalesHistory> findSalesByItem(String itemName, Long id) {
-        return salesHistoryDao.findSalesByItemName(id, itemName);
+        Map<Calendar, SalesHistory> map = new HashMap<>();
+        for (SalesHistory history : salesHistoryDao.findSalesByItemName(id, itemName)) {
+            Calendar name = history.getOrderDate();
+            if (!map.containsKey(name)) {
+                map.put(name, history);
+            } else if (map.get(name).getOrderDate().equals(history.getOrderDate())) {
+                SalesHistory s = map.get(name);
+                s.setCount(map.get(name).getCount() + history.getCount());
+                s.setPrice(map.get(name).getPrice().add(history.getPrice()));
+                s.setBasePrice(map.get(name).getBasePrice().add(history.getBasePrice()));
+                map.put(name, s);
+            }
+        }
+        return new ArrayList<>(map.values());
     }
 
     @Override
     public List<SalesHistory> findByDate(Long id, String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date1;
         Calendar calendar1;
         Calendar calendar2;
