@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {ImageMapper.class, ReviewMapper.class})
+        uses = {ImageMapper.class, ReviewMapper.class, CategoryMapper.class})
 public interface ItemMapper {
 
     ItemDto toDto(Item item);

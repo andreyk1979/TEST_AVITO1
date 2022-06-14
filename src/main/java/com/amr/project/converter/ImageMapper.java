@@ -16,7 +16,7 @@ import java.util.Base64;
         imports = {Base64.class})
 public interface ImageMapper {
     @Mapping(target = "pictureBase64", expression = "java(" +
-            "new String(Base64.getEncoder().encode(imageDto.getPicture()), \"UTF-8\"))")
+            "new String(Base64.getEncoder().encode(image.getPicture()), \"UTF-8\"))")
     ImageDto toDto(Image image) throws UnsupportedEncodingException;
 
     //TODO возврат моделей нужно реализовать @Mapping если нужен

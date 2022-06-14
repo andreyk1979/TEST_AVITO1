@@ -40,4 +40,5 @@ public class UserDto {
     private FavoriteDto favorite;
     private List<DiscountDto> discounts;
     private Set<Long> chatIds;
+
 }

@@ -104,14 +104,14 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Address address;
 
-    @OneToMany(cascade = {CascadeType.MERGE,
+    @OneToOne(cascade = {CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REFRESH,
             CascadeType.DETACH},
             orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
-    private List<Image> images;
+    private Image image;
 
 
     @OneToMany(

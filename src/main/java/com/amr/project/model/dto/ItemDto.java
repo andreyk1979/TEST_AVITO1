@@ -19,6 +19,7 @@ import java.util.List;
 public class ItemDto {
     private Long id;
     private String name;
+    private CategoryDto category;
     private BigDecimal basePrice;
     private BigDecimal price;
     private int count;
