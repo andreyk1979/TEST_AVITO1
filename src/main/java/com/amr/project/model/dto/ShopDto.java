@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-         property = "id", scope = Long.class)
+        property = "id", scope = Long.class)
 public class ShopDto {
     private Long id;
     private String name;

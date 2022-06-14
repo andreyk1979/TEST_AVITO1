@@ -23,7 +23,14 @@
         }
         button:hover { background: #007598; }
         .default { background: #009898; }
+        ul{
+            list-style: none;
+        }
+        .btn-group-vertical{
+            margin-top: 10px;
+        }
     </style>
+
 
 </head>
 <body>
@@ -99,11 +106,11 @@
                                     <li th:text="${item.getName}"></li>
                                 </div>
                                 <div class="card-body">
-                                    <ul th:each="image : ${item.getImages}">
-                                        <td th:if="image.isMain">
-                                            <img src="image.getPicture">
+
+                                        <td>
+                                            <img th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
                                         </td>
-                                    </ul>
+
                                     <p class="card-text"><li th:text="${item.getPrice}"></li></p>
                                     <p class="card-text"><li th:text="${item.getDescription}"></li></p>
                                     <button type="button" class="default" href="#">В корзину</button>
@@ -129,7 +136,7 @@
                             <li th:text="${shop.getName}"></li>
                         </div>
                         <div class="card-body">
-                            <img src="${shop.getLogo}">
+                            <img th:src="@{'data:image/jpeg;base64,'+${shop.getLogo().getPictureBase64()}}">
                             <p class="card-text"><li th:text="${shop.getDescription}"></li></p>
                             <button type="button" class="default" href="#">Перейти</button>
                         </div>
