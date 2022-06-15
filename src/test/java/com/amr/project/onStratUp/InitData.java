@@ -2,7 +2,6 @@ package com.amr.project.onStratUp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,6 +15,7 @@ public class InitData {
     public InitData(EntityManagerFactory entityManagerFactory, ImageStartUtil imageStartUtil) {
         this.entityManagerFactory = entityManagerFactory;
         this.imageStartUtil = imageStartUtil;
+
     }
 
     @PostConstruct

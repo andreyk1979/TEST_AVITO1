@@ -8,7 +8,6 @@ import com.amr.project.model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -21,6 +20,7 @@ import java.util.List;
 
 @Component
 public class Init {
+
     private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
@@ -28,7 +28,7 @@ public class Init {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    @PostConstruct
+    @PostConstruct()
     @Transactional
     public void toDoTable() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -60,12 +60,8 @@ public class Init {
         user.setPassword("cats");
         user.setActivate(true);
         user2.setActivate(true);
-        List<Image> listImagesForUser = new ArrayList<>();
-        listImagesForUser.add(entityManager.find(Image.class, 29L));
-        user.setImages(listImagesForUser);
-        List<Image> listImagesForUser2 = new ArrayList<>();
-        listImagesForUser2.add(entityManager.find(Image.class, 30L));
-        user2.setImages(listImagesForUser2);
+        user.setImage(entityManager.find(Image.class, 29L));
+        user2.setImage(entityManager.find(Image.class, 30L));
         entityManager.persist(user);
         entityManager.persist(user2);
         entityManager.getTransaction().commit();
