@@ -6,6 +6,8 @@ import com.amr.project.converter.UserMapper;
 import com.amr.project.service.abstracts.OrderService;
 import com.amr.project.service.abstracts.ShopService;
 import com.amr.project.service.abstracts.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
+@Api(description = "Данный контроллер возвращает страницу, содержащую описание пользователя")
 public class UserPageController {
 
     private final UserService userService;
@@ -47,6 +50,8 @@ public class UserPageController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value= "Метод showUserPage", notes= "Метод showUserPage принимает id пользователя из БД" +
+            " и возвращает html страницу userPage, которая содержит описание пользователя: его личные данные, фотографию, список заказов и магазинов")
     public String showUserPage(@PathVariable Long id, Model model) throws UnsupportedEncodingException {
 
         // Информация о юзере
