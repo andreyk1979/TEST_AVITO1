@@ -1,6 +1,7 @@
 package com.amr.project.util;
 
 import com.amr.project.model.entity.*;
+import com.amr.project.model.entity.report.SalesHistory;
 import com.amr.project.model.enums.Gender;
 import com.amr.project.model.enums.PersonalDataStatus;
 import com.amr.project.model.enums.Roles;
@@ -46,7 +47,31 @@ public class Init {
         createFavorites(entityManager);
         createOrders(entityManager);
         createCouponAndDiscount(entityManager);
+        createSalesHistory(entityManager);
         entityManager.close();
+    }
+
+    private  void createSalesHistory(EntityManager entityManager) {
+        entityManager.getTransaction().begin();
+        SalesHistory salesHistory = SalesHistory.builder()
+                .price(BigDecimal.valueOf(25))
+                .basePrice(BigDecimal.valueOf(5))
+                .item(entityManager.find(Item.class, 4L))
+                .count(1)
+                .orderDate(Calendar.getInstance())
+                .build();
+        entityManager.persist(salesHistory);
+        entityManager.getTransaction().commit();
+        entityManager.getTransaction().begin();
+        SalesHistory salesHistory2 = SalesHistory.builder()
+                .price(BigDecimal.valueOf(250))
+                .basePrice(BigDecimal.valueOf(9))
+                .item(entityManager.find(Item.class, 7L))
+                .count(5)
+                .orderDate(Calendar.getInstance())
+                .build();
+        entityManager.persist(salesHistory2);
+        entityManager.getTransaction().commit();
     }
 
     private void createUser(EntityManager entityManager) {
@@ -538,7 +563,7 @@ public class Init {
         Order order = new Order();
         order.setAddress(entityManager.find(Address.class, 1L));
         order.setUser(entityManager.find(User.class, 2L));
-        order.setStatus(Status.PAID);
+        order.setStatus(Status.SENT);
         order.setOrderDate(Calendar.getInstance());
         order.setExpectedDeliveryDate(Calendar.getInstance());
         Item item1 = entityManager.find(Item.class, 4L);
