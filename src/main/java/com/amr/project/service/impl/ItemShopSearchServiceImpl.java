@@ -9,6 +9,9 @@ import com.amr.project.service.abstracts.ItemShopSearchService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ItemShopSearchServiceImpl implements ItemShopSearchService {
 
@@ -29,5 +32,21 @@ public class ItemShopSearchServiceImpl implements ItemShopSearchService {
     public ItemShopDto getItemShopDto(String name) {
         return new ItemShopDto(shopMapper.toDtoList(shopSearchDao.findShopList(name)),
                 itemMapper.toDtoList(itemSearchDao.findItemList(name)));
+    }
+
+    @Override
+    @Transactional
+    public ItemShopDto getItemShopDto(String name, Integer page, Integer size) {
+        return new ItemShopDto(shopMapper.toDtoList(shopSearchDao.findShopList(name, page, size)),
+                itemMapper.toDtoList(itemSearchDao.findItemList(name, page, size)));
+    }
+
+    @Override
+    @Transactional
+    public List<Long> getCountItemShop(String name) {
+        List<Long> countItemShop = new ArrayList<>();
+        countItemShop.add(itemSearchDao.getCountItem(name));
+        countItemShop.add(shopSearchDao.getCountShop(name));
+        return countItemShop;
     }
 }

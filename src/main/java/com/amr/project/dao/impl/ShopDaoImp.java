@@ -28,6 +28,23 @@ public class ShopDaoImp extends ReadWriteDaoImpl<Shop, Long> implements ShopDao 
         Query query = em.createQuery("from Shop where is_moderated = false");
         return query.getResultList();
     }
+
+    @Override
+    public List<Shop> findShopList(String name, Integer page, Integer size) {
+        Query query = em.createQuery("from Shop where lower(name) like :name order by rating");
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+        query.setFirstResult(page);
+        return query.setMaxResults(size).getResultList();
+    }
+
+    @Override
+    public Long getCountShop(String name) {
+        Query query = em.createQuery("SELECT COUNT(*) as countShop from Shop where (lower(name) like :name)");
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+        List<Object> list = query.getResultList();
+
+        return (Long) list.get(0);
+    }
 }
 
 

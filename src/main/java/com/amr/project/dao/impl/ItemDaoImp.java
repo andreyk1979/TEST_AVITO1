@@ -16,6 +16,15 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
         return query.getResultList();
     }
 
+    @Override
+    public List<Item> findItemList(String name, Integer page, Integer size) {
+        Query query = em.createQuery("from Item where lower(name) like :name order by rating");
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+        query.setFirstResult(page);
+        return query.setMaxResults(size).getResultList();
+    }
+
+
     public List<Item> getFourMostPopularItem() {
         return em.createQuery("select s from Item s order by s.rating DESC")
                 .setMaxResults(4).getResultList();
@@ -43,8 +52,19 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
     }
 
     @Override
+    public Long getCountItem(String name) {
+        Query query = em.createQuery("SELECT COUNT(*) as countItem from Item where (lower(name) like :name)");
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+        List<Object> list = query.getResultList();
+
+        return (Long) list.get(0);
+
+    }
+
+    @Override
     public List<Item> getItemsToBeModerated() {
 
         return em.createQuery("from Item where is_moderated = false").getResultList();
     }
+
 }
