@@ -1,6 +1,5 @@
-package com.amr.project;
+package com.amr.project.webapp.controller;
 
-import com.amr.project.webapp.controller.SearchAvitoRestContoller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

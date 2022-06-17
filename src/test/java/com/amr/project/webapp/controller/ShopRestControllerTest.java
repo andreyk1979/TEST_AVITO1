@@ -1,4 +1,4 @@
-package com.amr.project;
+package com.amr.project.webapp.controller;
 
 import com.amr.project.service.abstracts.ShopService;
 import org.hamcrest.Matchers;

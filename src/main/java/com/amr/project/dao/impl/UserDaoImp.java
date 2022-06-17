@@ -21,7 +21,7 @@ public class UserDaoImp extends ReadWriteDaoImpl<User,Long> implements UserDao {
         }
         user.setSecret(null);
         user.setActivate(true);
-        update(user);
+        em.merge(user);
         return true;
     }
 
@@ -34,7 +34,7 @@ public class UserDaoImp extends ReadWriteDaoImpl<User,Long> implements UserDao {
         }
         user.setRole(Roles.USER);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        persist(user);
+        em.persist(user);
         return true;
     }
     @Override
