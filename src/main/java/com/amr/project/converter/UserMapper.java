@@ -30,10 +30,14 @@ public interface UserMapper {
     @Mapping(target = "age", source = "user.userInfo.age")
     @Mapping(target = "gender", source = "user.userInfo.gender")
     @Mapping(target = "birthday", source = "user.userInfo.birthday")
-    @Mapping(target = "couponIds", expression = "java(user.getCoupons().stream().map(Coupon::getId).collect(Collectors.toList()))")
-    @Mapping(target = "orderIds", expression = "java(user.getOrders().stream().map(Order::getId).collect(Collectors.toList()))")
-    @Mapping(target = "shopIds", expression = "java(user.getShops().stream().map(Shop::getId).collect(Collectors.toList()))")
-    @Mapping(target = "chatIds", expression = "java(user.getChats().stream().map(Chat::getId).collect(Collectors.toSet()))")
+    @Mapping(target = "couponIds", expression = "java(user.getCoupons() != null ? user.getCoupons().stream()" +
+            ".map(Coupon::getId).collect(Collectors.toList()) : null)")
+    @Mapping(target = "orderIds", expression = "java(user.getOrders() != null ? user.getOrders().stream()" +
+            ".map(Order::getId).collect(Collectors.toList()) : null)")
+    @Mapping(target = "shopIds", expression = "java(user.getShops() != null ? user.getShops().stream()" +
+            ".map(Shop::getId).collect(Collectors.toList()) : null)")
+    @Mapping(target = "chatIds", expression = "java(user.getChats() != null ? user.getChats().stream()" +
+            ".map(Chat::getId).collect(Collectors.toSet()) : null)")
     UserDto toDto(User user);
 
     @Mapping(target = "userInfo.phone", source = "phone")
