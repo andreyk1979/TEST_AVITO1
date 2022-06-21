@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource("/application.properties")
 @AutoConfigureMockMvc
 class SearchTest {
     @Autowired
