@@ -64,22 +64,22 @@ public class ItemRestController {
      * isPretendedToBeDelete сущности Item
      * @param id
      */
-    @ApiOperation(value = "Метод markForDeleteItem",
-            notes = "Метод markForDeleteItem помечает товары на удаление. принимает id в @PathVariable и ставит значение true в поле isPretendedToBeDeleted")
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void markForDeleteItem(@PathVariable Long id) {
-        itemService.isPretendedToBeDeleted(id);
-    }
-
-//    @ApiOperation(value = "Метод deleteItem(ROLE_ADMIN)",
-//            notes = "Метод deleteItem удаляет товар по id @PathVariable")
+//    @ApiOperation(value = "Метод markForDeleteItem",
+//            notes = "Метод markForDeleteItem помечает товары на удаление. принимает id в @PathVariable и ставит значение true в поле isPretendedToBeDeleted")
 //    @DeleteMapping("/{id}")
 //    @ResponseStatus(HttpStatus.OK)
-//    //@Secured("ROLE_ADMIN")
-//    //Снять коментарий после включения security
-//    public void deleteItem(@PathVariable Long id) {
-//        itemService.deleteByIdCascadeEnable(id);
+//    public void markForDeleteItem(@PathVariable Long id) {
+//        itemService.isPretendedToBeDeleted(id);
 //    }
+
+    @ApiOperation(value = "Метод deleteItem(ROLE_ADMIN)",
+            notes = "Метод deleteItem удаляет товар по id @PathVariable")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    //@Secured("ROLE_ADMIN")
+    //Снять коментарий после включения security
+    public void deleteItem(@PathVariable Long id) {
+        itemService.deleteByIdCascadeEnable(id);
+    }
 
 }

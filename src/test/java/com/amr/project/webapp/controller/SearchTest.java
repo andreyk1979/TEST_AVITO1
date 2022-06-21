@@ -28,7 +28,7 @@ class SearchTest {
     }
     @Test
     public void testFindItem() throws Exception {
-        this.mvc.perform(get("/api/search/{string}", "s20"))
+        this.mvc.perform(get("/api/search/{string}?showAll=true", "s20"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -36,7 +36,7 @@ class SearchTest {
     }
     @Test
     public void testFindShop() throws Exception {
-        this.mvc.perform(get("/api/search/{string}", "sUn"))
+        this.mvc.perform(get("/api/search/{string}?showAll=true", "sUn"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
