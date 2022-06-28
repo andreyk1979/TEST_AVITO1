@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <title>Chat</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
+            Авито 2.0</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic"
+                aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse show" id="navbarBasic">
+            <div class="col-6 pt-3 pl-0 pr-0">
+                <ul class="navbar-nav pb-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/"
+                           style="color: aliceblue; font-family: Harrington; font-size: large">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page"
+                           style="color: aliceblue; font-family: Harrington; font-size: large"
+                           onclick="javascript:history.back(); return false;">Назад</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-5 pt-3 pl-0 pr-0">
+
+            </div>
+
+            <div class="col-1 pt-3 pl-0 pr-0">
+                <ul class="navbar-nav pb-3">
+                    <li class="nav-item text-nowrap">
+                        <button class="btn btn-info" href="/logout">Выйти</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container" style="max-width: 100%">
+    <div class="row" style="height: 120vh">
+        <ul class="nav flex-column nav-pills col-2" id = "chatBar">
+            <li class="nav-item">
+                <a class="nav-link active list-group-item-action list-group-item-info"
+                   href="#newChat" data-toggle="tab" id="0">Новый чат</a>
+            </li>
+        </ul>
+        <div class="tab-content col-10">
+
+            <div class="tab-pane fade show active" id="newChat">
+                <div class="card">
+                    <div class="bg-light p-2 pl-4 font-weight-bold"><h5 id="userName">User name</h5></div>
+                    <div class="card-block p-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id = "newChatForm">
+                                    <div class="form-group">
+                                        <label for="newChatToUserName">Имя получателя</label>
+                                        <input type="text" class="form-control" id="newChatToUserName"
+                                               placeholder="Введите имя получателя">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message">Введите сообщение</label>
+                                        <input type="text" class="form-control" id="newChatMessage"
+                                               placeholder="Введите сообщение">
+                                    </div>
+                                    <button id="sendNewChat" type="submit" class="btn btn-info">Отправить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="chat">
+                <div class="card">
+                    <div class="bg-light p-2 pl-4 font-weight-bold"><h5>User name</h5></div>
+                    <div class="card-block p-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="conversation" class="table table-info">
+                                    <thead>
+                                    </thead>
+                                    <tbody id="greetings">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id = "chatForm">
+                                    <div class="form-group">
+                                        <label for="message">Введите сообщение</label>
+                                        <input type="text" class="form-control" id="message"
+                                               placeholder="Введите сообщение">
+                                    </div>
+                                    <button id="send" type="submit" class="btn btn-info">Отправить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<script th:src="@{chat.js}"></script>
+</body>
+</html>

@@ -33,8 +33,6 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
-    private Long hash;
-
 
     @OneToMany(
             mappedBy = "chat",

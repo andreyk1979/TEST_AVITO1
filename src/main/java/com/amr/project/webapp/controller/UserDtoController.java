@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -64,5 +66,13 @@ public class UserDtoController {
             "возвращает UserDto" )
     public UserDto getUserById(@ApiParam("Id пользователя из БД") @PathVariable Long id) {
         return userMapper.toDto(userService.findById(id));
+    }
+
+    @ApiOperation(value = "Метод getUserByName", notes = "Метод getUserByName принимает Principal магазина и " +
+            "возвращает UserDto" )
+    @GetMapping("/users/user")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserByName(Principal principal) {
+        return userMapper.toDto(userService.findByUsername(principal.getName()));
     }
 }
