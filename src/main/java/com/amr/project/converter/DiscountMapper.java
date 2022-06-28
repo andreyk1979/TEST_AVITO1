@@ -6,7 +6,10 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+import java.util.List;
+
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+uses = {ShopMapper.class, UserMapper.class})
 public interface DiscountMapper {
 
     @Mapping(target = "userId", source = "shop.user.id")
@@ -15,4 +18,5 @@ public interface DiscountMapper {
 
     //TODO возврат моделей нужно реализовать @Mapping если нужен
     Discount toModel(DiscountDto discountDto);
+    List<DiscountDto> tolist(List<Discount> discountList);
 }
