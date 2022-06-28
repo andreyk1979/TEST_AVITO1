@@ -48,6 +48,7 @@ public class Init {
         createOrders(entityManager);
         createCouponAndDiscount(entityManager);
         createSalesHistory(entityManager);
+        createChat(entityManager);
         entityManager.close();
     }
 
@@ -601,6 +602,15 @@ public class Init {
         discount.setFixedDiscount(200);
         discount.setPercentage(3);
         entityManager.persist(discount);
+        entityManager.getTransaction().commit();
+    }
+
+    private void createChat (EntityManager entityManager) {
+        entityManager.getTransaction().begin();
+        Chat chat = new Chat();
+        chat.setRecipient(entityManager.find(User.class, 2L));
+        chat.setSender(entityManager.find(User.class, 1L));
+        entityManager.persist(chat);
         entityManager.getTransaction().commit();
     }
 }

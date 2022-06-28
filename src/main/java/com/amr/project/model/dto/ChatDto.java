@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -18,7 +16,7 @@ import java.util.Set;
         property = "id", scope = Long.class)
 public class ChatDto {
     private Long id;
-    private Long hash;
-    private Set<Long> membersId;
+    private String fromUserName;
+    private String toUserName;
     private List<MessageDto> messages;
 }

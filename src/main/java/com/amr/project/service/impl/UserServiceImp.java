@@ -59,4 +59,9 @@ public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements U
         dao.update(user);
         return true;
     }
+
+    @Override
+    public boolean existByUserName(String userName) {
+        return userDao.existByUserName(userName);
+    }
 }

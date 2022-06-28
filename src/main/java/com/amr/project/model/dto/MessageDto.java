@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 
@@ -23,8 +22,8 @@ import java.time.LocalDateTime;
         property = "id", scope = Long.class)
 public class MessageDto {
     private Long id;
-    private String textMessage;
     private boolean viewed;
+    private String textMessage;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -32,6 +31,6 @@ public class MessageDto {
     private LocalDateTime creationTime;
 
     private Long chatId;
-    private Long toUserId;
-    private Long fromUserId;
+    private String toUserName;
+    private String fromUserName;
 }
