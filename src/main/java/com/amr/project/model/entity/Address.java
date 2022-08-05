@@ -35,13 +35,13 @@ public class Address {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "city_index", nullable = false, unique = true)
+    @Column(name = "city_index", nullable = false, unique = true, length = 250)
     private String cityIndex;
 
-    @Column(name = "street", nullable = false, unique = true)
+    @Column(name = "street", nullable = false, unique = true, length = 250)
     private String street;
 
-    @Column(name = "house", nullable = false, unique = true)
+    @Column(name = "house", nullable = false, unique = true, length = 250)
     private String house;
 
 
