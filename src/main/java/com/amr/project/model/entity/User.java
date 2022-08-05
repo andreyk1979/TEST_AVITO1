@@ -46,11 +46,11 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Long id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, length = 250)
     @ToString.Exclude
     private String email;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, length = 250)
     @ToString.Exclude
     private String username;
     @ToString.Exclude
