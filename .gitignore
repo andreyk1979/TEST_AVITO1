@@ -37,5 +37,5 @@ build/
 *.log
 *.gz
 
-*.properties
-.application.properties
+#*.properties
+#.application.properties
