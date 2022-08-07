@@ -24,6 +24,7 @@ logs
 /nbproject/private/
 /nbbuild/
 /dist/
+
 /nbdist/
 /.nb-gradle/
 build/
@@ -38,4 +39,6 @@ build/
 *.gz
 
 #*.properties
+#application.properties
+#application.properties
 #application.properties
