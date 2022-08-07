@@ -38,4 +38,4 @@ build/
 *.gz
 
 #*.properties
-application.properties
+#application.properties
