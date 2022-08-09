@@ -7,6 +7,7 @@ import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.MailService;
 import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
@@ -16,13 +17,15 @@ public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements U
     private final UserDao userDao;
     private final UserMapper userMapper;
     private final MailService mailService;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImp(UserDao userDao,MailService mailService, UserMapper userMapper) {
+    public UserServiceImp(UserDao userDao,MailService mailService, UserMapper userMapper, PasswordEncoder bCryptPasswordEncoder) {
         super(userDao);
         this.userDao= userDao;
         this.userMapper = userMapper;
         this.mailService = mailService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements U
     @Transactional
     public boolean addUser(UserDto userDto) {
         User user = userMapper.toUser(userDto);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         String message = String.format("Уважамый ,%s! \n" +
                 "Вы успешно зарегистрировались на сайте Avito, \n" +
                 "для окончании регистрации пройдите по ссылке \n" +

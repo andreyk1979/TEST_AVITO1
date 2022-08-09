@@ -1,23 +1,28 @@
 package com.amr.project.webapp.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 
-//@Configuration
-//@ComponentScan("com.amr.project")
-//@EnableWebSecurity
+@Configuration
+@ComponentScan("com.amr.project")
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationProvider provider;
     private CustomWebAuthenticationDetailsSource customWebAuthenticationDetailsSource;
-
 
     @Autowired
     public void setProvider(CustomAuthenticationProvider provider) {
@@ -41,18 +46,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers("/").hasRole("USER")
-                .anyRequest().authenticated()
-                .and().formLogin()
-                .authenticationDetailsSource(customWebAuthenticationDetailsSource)
+              .authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .antMatchers("/sales", "/shop/**/description", "/", "/login").permitAll()
+                    .antMatchers("/moderation/**").hasAuthority("MODERATOR")
+                    .antMatchers("/user/**", "/chat/**", "/shop/registration/**").hasAuthority("USER")
+                    .antMatchers("/**").hasAuthority("ADMIN")
+              .anyRequest().authenticated()
                 .and()
-                .logout().permitAll()
+                    .formLogin()
+                    .authenticationDetailsSource(customWebAuthenticationDetailsSource)
                 .and()
-                .csrf().disable();
+                    .logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                    .csrf().disable();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(provider);
+    }
+
+    @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }

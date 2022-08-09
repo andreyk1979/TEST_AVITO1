@@ -109,7 +109,7 @@ public class ModerationController {
     }
 
     @PostMapping("/decline_item/{id}")
-    public String declineReview(@ModelAttribute("item_and_reason") ItemDto item, @PathVariable(name = "id") int id) {
+    public String declineReview(@ModelAttribute("item_and_reason") ItemDto item, @PathVariable(name = "id") int id) { //ошибка в нэйминге. Должен быть declineItem
         moderationService.declineItem(id,item.getDescription());
 
         return "redirect:/moderation";
