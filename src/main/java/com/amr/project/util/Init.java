@@ -7,6 +7,7 @@ import com.amr.project.model.enums.PersonalDataStatus;
 import com.amr.project.model.enums.Roles;
 import com.amr.project.model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -22,7 +23,6 @@ import javax.persistence.EntityManagerFactory;
 @Component
 public class Init {
     private final EntityManagerFactory entityManagerFactory;
-
     @Autowired
     public Init(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
@@ -54,6 +54,7 @@ public class Init {
 
     private  void createSalesHistory(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         SalesHistory salesHistory = SalesHistory.builder()
                 .price(BigDecimal.valueOf(25))
                 .basePrice(BigDecimal.valueOf(5))
@@ -62,8 +63,7 @@ public class Init {
                 .orderDate(Calendar.getInstance())
                 .build();
         entityManager.persist(salesHistory);
-        entityManager.getTransaction().commit();
-        entityManager.getTransaction().begin();
+
         SalesHistory salesHistory2 = SalesHistory.builder()
                 .price(BigDecimal.valueOf(250))
                 .basePrice(BigDecimal.valueOf(9))
@@ -72,41 +72,55 @@ public class Init {
                 .orderDate(Calendar.getInstance())
                 .build();
         entityManager.persist(salesHistory2);
+
         entityManager.getTransaction().commit();
     }
 
     private void createUser(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         User user = new User();
-        User user2 = new User();
-        user2.setUsername("user");
-        user2.setPassword("dogs");
-        user.setUsername("seller");
-        user.setPassword("cats");
+        user.setUsername("user");
+        user.setPassword("$2a$12$rVSFwHHXB50zBZLE8SFLfO3hXzZ3F.TcR.qjlskgfZz3.KGwZL4Si");//"user"
         user.setActivate(true);
-        user2.setActivate(true);
         user.setImage(entityManager.find(Image.class, 29L));
-        user2.setImage(entityManager.find(Image.class, 30L));
         entityManager.persist(user);
-        entityManager.persist(user2);
+
+        User moderator = new User();
+        moderator.setUsername("moderator");
+        moderator.setPassword("$2a$12$ZZ5VTLg6s/LP395v4c0F2ugZKCvc8v9.13ZrKRbp00.IGBcDAkxwy");//"moderator"
+        moderator.setActivate(true);
+        moderator.setImage(entityManager.find(Image.class, 30L));
+        entityManager.persist(moderator);
+
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPassword("$2a$12$wGD67O3JNEWnl.ZLjEkSdeGd2pr8JzHtpw7KYj.1sT7wgcJzPYH36");//admin
+        admin.setActivate(true);
+        admin.setImage(entityManager.find(Image.class, 28L));
+        entityManager.persist(admin);
+
         entityManager.getTransaction().commit();
     }
 
     private void createCountry(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Country country = new Country();
         country.setName("Россия");
         entityManager.persist(country);
+
         entityManager.getTransaction().commit();
     }
 
     private void createPersonalData(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         PersonalData personalData = new PersonalData();
         personalData.setPlaceOfBirth("Санкт-Петербург");
-        personalData.setAuthority("USER");
+        personalData.setAuthority("ROLE_USER"); // может быть ROLE_USER ???
         personalData.setPassport(127498L);
-        personalData.setComment("Придирчивый покупатель");
+        personalData.setComment("USER. Придирчивый покупатель. Добросовестный продавец");
         Date dateOfPersonalData = new Date();
         dateOfPersonalData.setTime(12L);
         personalData.setDateOfIssue(dateOfPersonalData);
@@ -115,14 +129,26 @@ public class Init {
         listOfPersonalDataImages.add(entityManager.find(Image.class, 31L));
         personalData.setListOfImages(listOfPersonalDataImages);
         entityManager.persist(personalData);
-        entityManager.getTransaction().commit();
 
-        entityManager.getTransaction().begin();
+        PersonalData personalData3 = new PersonalData();
+        personalData3.setPlaceOfBirth("Москва");
+        personalData3.setAuthority("MODERATOR"); // --==--
+        personalData3.setPassport(111555L);
+        personalData3.setComment("MODERATOR");
+        Date dateOfPersonalData3 = new Date();
+        dateOfPersonalData3.setTime(16L);
+        personalData3.setDateOfIssue(dateOfPersonalData3);
+        personalData3.setStatus(PersonalDataStatus.CONFIRMED);
+        List<Image> listOfPersonalDataImages3 = new ArrayList<>();
+        listOfPersonalDataImages3.add(entityManager.find(Image.class, 33L));
+        personalData3.setListOfImages(listOfPersonalDataImages3);
+        entityManager.persist(personalData3);
+
         PersonalData personalData2 = new PersonalData();
         personalData2.setPlaceOfBirth("Москва");
-        personalData2.setAuthority("ADMIN");
+        personalData2.setAuthority("ADMIN"); // --==--
         personalData2.setPassport(604365L);
-        personalData2.setComment("Добросовестный продавец");
+        personalData2.setComment("ADMIN");
         Date dateOfPersonalData2 = new Date();
         dateOfPersonalData2.setTime(15L);
         personalData2.setDateOfIssue(dateOfPersonalData2);
@@ -131,6 +157,7 @@ public class Init {
         listOfPersonalDataImages2.add(entityManager.find(Image.class, 32L));
         personalData2.setListOfImages(listOfPersonalDataImages2);
         entityManager.persist(personalData2);
+
         entityManager.getTransaction().commit();
     }
 
@@ -140,69 +167,96 @@ public class Init {
         city.setName("Санкт-Петерубрг");
         city.setCountry(entityManager.find(Country.class, 1L));
         entityManager.persist(city);
+
         City city2 = new City();
         city2.setName("Москва");
         city2.setCountry(entityManager.find(Country.class, 1L));
         entityManager.persist(city2);
+
         entityManager.getTransaction().commit();
     }
 
     private void createAddress(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Address address = new Address();
         address.setHouse("54а");
         address.setCityIndex(String.valueOf(101000));
         address.setStreet("Никольская ул.");
         address.setCity(entityManager.find(City.class, 2L));
         entityManager.persist(address);
+
         Address address2 = new Address();
         address2.setHouse("11/3");
         address2.setCityIndex(String.valueOf(187015));
         address2.setStreet("Миллионная ул.");
         address2.setCity(entityManager.find(City.class, 1L));
         entityManager.persist(address2);
+
+        Address address3 = new Address();
+        address3.setHouse("57");
+        address3.setCityIndex(String.valueOf(181535));
+        address3.setStreet("Завойко ул.");
+        address3.setCity(entityManager.find(City.class, 1L));
+        entityManager.persist(address3);
+
         Address shopAddress = new Address();
-        shopAddress.setHouse("Большой склад магазина");
+        shopAddress.setHouse("Большой склад");
         shopAddress.setCityIndex(String.valueOf(142050));
-        shopAddress.setStreet("ул. Белые столбы");
+        shopAddress.setStreet("Ленина ул.");
         shopAddress.setCity(entityManager.find(City.class, 2L));
         entityManager.persist(shopAddress);
+
         entityManager.getTransaction().commit();
     }
 
     private void updateUsers(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
+        User user = entityManager.find(User.class, 1L);
         Address addressForUserFromDB = entityManager.find(Address.class, 1L);
-        User userFromDB = entityManager.find(User.class, 1L);
-        userFromDB.setAddress(addressForUserFromDB);
-        userFromDB.setRole(Roles.ADMIN);
-        userFromDB.setEmail("seller@gmail.com");
-        userFromDB.setPersonalData(entityManager.find(PersonalData.class, 1L));
-        entityManager.merge(userFromDB);
+        user.setAddress(addressForUserFromDB);
+        user.setRole(Roles.USER);
+        user.setEmail("user@gmail.com");
+        user.setPersonalData(entityManager.find(PersonalData.class, 1L));
+        entityManager.merge(user);
+
+        User moderator = entityManager.find(User.class, 2L);
         Address addressForUserFromDB2 = entityManager.find(Address.class, 2L);
-        User userFromDB2 = entityManager.find(User.class, 2L);
-        userFromDB2.setAddress(addressForUserFromDB2);
-        userFromDB2.setRole(Roles.USER);
-        userFromDB2.setEmail("user@gmail.com");
-        userFromDB2.setPersonalData(entityManager.find(PersonalData.class, 2L));
-        entityManager.merge(userFromDB2);
+        moderator.setAddress(addressForUserFromDB2);
+        moderator.setRole(Roles.MODERATOR);
+        moderator.setEmail("moderator@gmail.com");
+        moderator.setPersonalData(entityManager.find(PersonalData.class, 2L));
+        entityManager.merge(moderator);
+
+        User admin = entityManager.find(User.class, 3L);
+        Address addressForUserFromDB3 = entityManager.find(Address.class, 3L);
+        admin.setAddress(addressForUserFromDB3);
+        admin.setRole(Roles.ADMIN);
+        admin.setEmail("admin@gmail.com");
+        admin.setPersonalData(entityManager.find(PersonalData.class, 3L));
+        entityManager.merge(admin);
+
         entityManager.getTransaction().commit();
+
     }
 
     private void createShop(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Shop shop = new Shop();
-        shop.setAddress(entityManager.find(Address.class, 3L));
+        shop.setAddress(entityManager.find(Address.class, 4L));
         shop.setName("Samsung");
         shop.setEmail("samsung@gmail.com");
         shop.setPhone("88002528282");
         shop.setDescription("Официальный магазин Samsung");
         shop.setRating(8.99D);
-        shop.setUser(entityManager.find(User.class, 2L));
+        shop.setUser(entityManager.find(User.class, 1L));
         shop.setLogo(entityManager.find(Image.class, 1L));
         Image image = entityManager.find(Image.class, 1L);
         image.setShop(shop);
         entityManager.persist(shop);
+
         entityManager.getTransaction().commit();
     }
 
@@ -217,20 +271,34 @@ public class Init {
         userInfo.setLastName("Sidorov");
         userInfo.setBirthday(Calendar.getInstance());
         entityManager.persist(userInfo);
-        UserInfo userInfo2 = new UserInfo();
-        userInfo2.setUser(entityManager.find(User.class, 2L));
-        userInfo2.setPhone("86004773828");
-        userInfo2.setAge(40);
-        userInfo2.setGender(Gender.FEMALE);
-        userInfo2.setFirstName("Anna");
-        userInfo2.setLastName("Ivanova");
-        userInfo2.setBirthday(Calendar.getInstance());
-        entityManager.persist(userInfo2);
+
+        UserInfo moderatorInfo = new UserInfo();
+        moderatorInfo.setUser(entityManager.find(User.class, 2L));
+        moderatorInfo.setPhone("86004773828");
+        moderatorInfo.setAge(40);
+        moderatorInfo.setGender(Gender.FEMALE);
+        moderatorInfo.setFirstName("Anna");
+        moderatorInfo.setLastName("Ivanova");
+        moderatorInfo.setBirthday(Calendar.getInstance());
+        entityManager.persist(moderatorInfo);
+
+
+        UserInfo adminInfo = new UserInfo();
+        adminInfo.setUser(entityManager.find(User.class, 3L));
+        adminInfo.setPhone("87004773828");
+        adminInfo.setAge(40);
+        adminInfo.setGender(Gender.FEMALE);
+        adminInfo.setFirstName("Rick");
+        adminInfo.setLastName("Sanchez");
+        adminInfo.setBirthday(Calendar.getInstance());
+        entityManager.persist(adminInfo);
+
         entityManager.getTransaction().commit();
     }
 
     private void createItems(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         List<Image> imagesOfItem1 = new ArrayList<>();
         for (long i = 20L; i < 23L; i++) {
             imagesOfItem1.add(entityManager.find(Image.class, i));
@@ -504,10 +572,12 @@ public class Init {
         reviewOfHeadPhone3.add(headPhoneReview3);
         headPhone3.setReviews(reviewOfHeadPhone3);
         entityManager.persist(headPhone3);
+
         entityManager.getTransaction().commit();
     }
     private void createCategories(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Category tvCategory = new Category();
         tvCategory.setName("Телевизоры");
         entityManager.persist(tvCategory);
@@ -517,53 +587,61 @@ public class Init {
         Category headPhonesCategory = new Category();
         headPhonesCategory.setName("Наушники");
         entityManager.persist(headPhonesCategory);
+
         entityManager.getTransaction().commit();
     }
 
     private void createCartItem(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         CartItem cartItem = new CartItem();
         cartItem.setQuantity(5);
         cartItem.setShop(entityManager.find(Shop.class, 1L));
-        cartItem.setUser(entityManager.find(User.class, 2L));
+        cartItem.setUser(entityManager.find(User.class, 1L));
         entityManager.persist(cartItem);
+
         entityManager.getTransaction().commit();
     }
 
     private void createFeedback(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Feedback feedback = new Feedback();
         feedback.setShop(entityManager.find(Shop.class, 1L));
-        feedback.setUsername(entityManager.find(User.class, 2L).getUsername());
-        feedback.setUser(entityManager.find(User.class, 2L));
+        feedback.setUsername(entityManager.find(User.class, 1L).getUsername());
+        feedback.setUser(entityManager.find(User.class, 1L));
         feedback.setFullText("Хороший магазин и выбор товаров");
         feedback.setReason("Тестовый фидбэк");
         feedback.setDateTime(LocalDateTime.now());
         entityManager.persist(feedback);
+
         entityManager.getTransaction().commit();
     }
 
     private void createFavorites(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Favorite favorite = new Favorite();
         List<Item> favorites = new ArrayList<>();
         favorites.add(entityManager.find(Item.class, 1L));
         favorites.add(entityManager.find(Item.class, 5L));
         favorites.add(entityManager.find(Item.class, 8L));
         favorite.setItems(favorites);
-        favorite.setUser(entityManager.find(User.class, 2L));
+        favorite.setUser(entityManager.find(User.class, 1L));
         List<Shop> favShops = new ArrayList<>();
         favShops.add(entityManager.find(Shop.class, 1L));
         favorite.setShops(favShops);
         entityManager.persist(favorite);
+
         entityManager.getTransaction().commit();
     }
 
     private void createOrders(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Order order = new Order();
         order.setAddress(entityManager.find(Address.class, 1L));
-        order.setUser(entityManager.find(User.class, 2L));
+        order.setUser(entityManager.find(User.class, 1L));
         order.setStatus(Status.SENT);
         order.setOrderDate(Calendar.getInstance());
         order.setExpectedDeliveryDate(Calendar.getInstance());
@@ -577,18 +655,21 @@ public class Init {
         order.setCurrency("RUB");
         order.setDescription("Fragile!");
         entityManager.persist(order);
-        User user = entityManager.find(User.class, 2L);
+
+        User user = entityManager.find(User.class, 1L);
         List<Order> orders = new ArrayList<>();
         orders.add(entityManager.find(Order.class, 1L));
         user.setOrders(orders);
         entityManager.merge(user);
+
         entityManager.getTransaction().commit();
     }
 
     private void createCouponAndDiscount(EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Coupon coupon = new Coupon();
-        coupon.setUser(entityManager.find(User.class, 2L));
+        coupon.setUser(entityManager.find(User.class, 1L));
         coupon.setEnd(Calendar.getInstance());
         coupon.setStart(Calendar.getInstance());
         List<Coupon> coupons = new ArrayList<>();
@@ -596,21 +677,25 @@ public class Init {
         Shop shop = entityManager.find(Shop.class, 1L);
         shop.setCoupons(coupons);
         entityManager.persist(coupon);
+
         Discount discount = new Discount();
         discount.setShop(entityManager.find(Shop.class, 1L));
         discount.setMinOrder(2);
         discount.setFixedDiscount(200);
         discount.setPercentage(3);
         entityManager.persist(discount);
+
         entityManager.getTransaction().commit();
     }
 
     private void createChat (EntityManager entityManager) {
         entityManager.getTransaction().begin();
+
         Chat chat = new Chat();
         chat.setRecipient(entityManager.find(User.class, 2L));
         chat.setSender(entityManager.find(User.class, 1L));
         entityManager.persist(chat);
+
         entityManager.getTransaction().commit();
     }
 }
