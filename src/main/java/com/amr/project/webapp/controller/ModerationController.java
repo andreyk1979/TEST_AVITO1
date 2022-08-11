@@ -8,7 +8,9 @@ import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.dto.ReviewDto;
 import com.amr.project.model.dto.ShopDto;
 import com.amr.project.model.entity.Review;
+import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.ModerationService;
+import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -35,19 +38,31 @@ public class ModerationController {
     private ReviewMapper reviewMapper;
     private ModerationService moderationService;
 
+    private final UserService userService;
+
     private Map<ShopDto, String> shopsForModel;
     private Map<ItemDto, String> itemsForModel;
 
     @Autowired
-    public ModerationController(ShopMapper shopMapper, ItemMapper itemMapper, ReviewMapper reviewMapper, ModerationService moderationService) {
+    public ModerationController(ShopMapper shopMapper, ItemMapper itemMapper, ReviewMapper reviewMapper, ModerationService moderationService, UserService userService) {
         this.shopMapper = shopMapper;
         this.itemMapper = itemMapper;
         this.reviewMapper = reviewMapper;
         this.moderationService = moderationService;
+        this.userService = userService;
     }
 
     @GetMapping()
-    public String showModerationPage(Model model) throws UnsupportedEncodingException {
+    public String showModerationPage(Model model, Principal principal) throws UnsupportedEncodingException {
+
+        User user = null;
+        if (principal != null) {
+            user = userService.findByUsername(principal.getName());
+            // Замена первой буквы имени на заглавную для корректного отображения в приветствии на фронте.
+            user.setUsername(user.getUsername().substring(0, 1).toUpperCase() + user.getUsername().substring(1));
+        }
+        model.addAttribute("activeUser", user);
+
         shopsForModel = new HashMap<>();
         itemsForModel = new HashMap<>();
 

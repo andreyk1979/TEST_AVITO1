@@ -38,7 +38,6 @@ public class UserDaoImp extends ReadWriteDaoImpl<User,Long> implements UserDao {
             return false;
         }
         user.setRole(Roles.USER);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         em.persist(user);
         return true;
     }

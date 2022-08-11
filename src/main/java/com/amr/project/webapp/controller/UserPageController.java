@@ -3,6 +3,7 @@ package com.amr.project.webapp.controller;
 import com.amr.project.converter.OrderMapper;
 import com.amr.project.converter.ShopMapper;
 import com.amr.project.converter.UserMapper;
+import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.OrderService;
 import com.amr.project.service.abstracts.ShopService;
 import com.amr.project.service.abstracts.UserService;
@@ -18,6 +19,7 @@ import com.amr.project.model.dto.*;
 
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ public class UserPageController {
     private final OrderMapper orderMapper;
 
     private Map<ShopDto, String> shopsIsUserMap;
-    private Map<OrderDto,Map<ItemDto, String>> orderIsUserMap;
+    private Map<OrderDto, Map<ItemDto, String>> orderIsUserMap;
     private Map<ItemDto, String> imageForItemMap;
 
     @Autowired
@@ -50,9 +52,17 @@ public class UserPageController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value= "Метод showUserPage", notes= "Метод showUserPage принимает id пользователя из БД" +
+    @ApiOperation(value = "Метод showUserPage", notes = "Метод showUserPage принимает id пользователя из БД" +
             " и возвращает html страницу userPage, которая содержит описание пользователя: его личные данные, фотографию, список заказов и магазинов")
-    public String showUserPage(@PathVariable Long id, Model model) throws UnsupportedEncodingException {
+    public String showUserPage(@PathVariable Long id, Model model, Principal principal) throws UnsupportedEncodingException {
+
+        User user = null;
+        if (principal != null) {
+            user = userService.findByUsername(principal.getName());
+            // Замена первой буквы имени на заглавную для корректного отображения в приветствии на фронте.
+            user.setUsername(user.getUsername().substring(0, 1).toUpperCase() + user.getUsername().substring(1));
+        }
+        model.addAttribute("activeUser", user);
 
         // Информация о юзере
         UserDto userDto = userMapper.toDto(userService.findById(id));
@@ -60,9 +70,13 @@ public class UserPageController {
 
         //Конвертация фото пользователя
         ImageDto image = userDto.getImage();
+        // У пользователя без картинки вылетало NullPointerException. Поставил условие как заглушку
+        if (image == null) {
+            image = userMapper.toDto(userService.findById(1L)).getImage();
+        }
         byte[] byteImage = Base64.getEncoder().encode(image.getPicture());
-        String avatar = new String(byteImage,"UTF-8");
-        model.addAttribute("avatarka", avatar );
+        String avatar = new String(byteImage, "UTF-8");
+        model.addAttribute("avatarka", avatar);
 
         // Информация по магазинам и конвертация их логотипа
         shopsIsUserMap = new HashMap<>();
@@ -70,25 +84,25 @@ public class UserPageController {
         for (ShopDto shop : shops) {
             ImageDto shopImage = shop.getLogo();
             byte[] byteShopImage = Base64.getEncoder().encode(shopImage.getPicture());
-            shopsIsUserMap.put(shop, new String(byteShopImage,"UTF-8"));
+            shopsIsUserMap.put(shop, new String(byteShopImage, "UTF-8"));
         }
         model.addAttribute("userShop", shopsIsUserMap);
 
         //Информация по заказам пользователя, вещам в них и конвертация их изображений
         orderIsUserMap = new HashMap<>();
         imageForItemMap = new HashMap<>();
-        List<OrderDto> ordersIsUser = orderMapper.toDtoList(userDto.getOrderIds().stream().map(orderService :: findById).toList());
+        List<OrderDto> ordersIsUser = orderMapper.toDtoList(userDto.getOrderIds().stream().map(orderService::findById).toList());
         for (OrderDto order : ordersIsUser) {
             List<ItemDto> itemDtoList = order.getItemsInOrder();
-            for(ItemDto item : itemDtoList){
+            for (ItemDto item : itemDtoList) {
                 ImageDto itemImage = item.getImages().get(0);
                 byte[] itemImageByte = Base64.getEncoder().encode(itemImage.getPicture());
-                imageForItemMap.put(item,new String(itemImageByte, "UTF-8"));
+                imageForItemMap.put(item, new String(itemImageByte, "UTF-8"));
             }
             orderIsUserMap.put(order, imageForItemMap);
         }
 
-        model.addAttribute("ordersUser", orderIsUserMap );
+        model.addAttribute("ordersUser", orderIsUserMap);
 
 
         return "userPage";

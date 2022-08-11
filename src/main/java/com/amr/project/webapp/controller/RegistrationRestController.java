@@ -19,8 +19,8 @@ public class RegistrationRestController {
 
     @PostMapping()
     @ResponseBody
-       public ResponseEntity addUser(@RequestBody UserDto userDto) {
-        if(!userService.addUser(userDto)) {
+    public ResponseEntity addUser(@RequestBody UserDto userDto) {
+        if (!userService.addUser(userDto)) {
             return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -28,9 +28,7 @@ public class RegistrationRestController {
 
     @GetMapping("/activate/{code}")
     public String activate(@PathVariable String code) {
-        if(userService.activate(code)){
-            return "redirect:/";
-        }
+        userService.activate(code);
         return "redirect:/";
     }
 }
