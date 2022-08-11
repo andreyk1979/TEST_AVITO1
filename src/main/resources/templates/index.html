@@ -7,32 +7,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Авито 2.0</title>
-    <script type="text/javascript" src="webjars/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
+
+    <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/main.js"></script> <!-- Gem jQuery -->
+    <script type="/text/javascript" src="/search.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-    <link rel="stylesheet" href="css/style.css"> <!-- Gem style -->
-    <link rel="stylesheet" href="css/pagination.css"> <!-- Gem style -->
-    <script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <link rel="stylesheet" href="/css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- Gem style -->
+    <link rel="stylesheet" href="/css/pagination.css"> <!-- Gem style -->
+    <script src="/js/modernizr.js"></script> <!-- Modernizr -->
     <style>
         button {
             color: #fff;
             border: 1px solid #014457;
             border-radius: 5px;
             width: 200px;
-            height:35px;
-            padding-top:0;
-            text-align:center;
-            vertical-align:center;
+            height: 35px;
+            padding-top: 0;
+            text-align: center;
+            vertical-align: center;
         }
-        button:hover { background: #007598; }
-        .default { background: #009898; }
-        ul{
+
+        button:hover {
+            background: #007598;
+        }
+
+        .default {
+            background: #009898;
+        }
+
+        ul {
             list-style: none;
         }
-        .btn-group-vertical{
+
+        .btn-group-vertical {
             margin-top: 10px;
         }
     </style>
@@ -43,8 +55,8 @@
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px">
     <div class="container-fluid">
-        <img alt="Logo" src="logo.jpg" width="30" height="30">
-        <a class="navbar-brand" href="#" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
+        <img alt="Logo" src="/logo.jpg" width="30" height="30">
+        <a class="navbar-brand" href="/" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
             Авито 2.0</strong></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic"
                 aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,27 +83,56 @@
                     </ul>
                 </li>
             </ul>
-            <input class="form-control me-2"  input type="search" name="text" placeholder="Поиск товаров..."
+            <input class="form-control me-2" input type="search" name="text" placeholder="Поиск товаров..."
                    aria-label="Поиск товаров..." id="sb" size="50" style="height: 32px">
             <button class="default" type="submit" onclick="test()" style="height: 32px; width: 80px">Найти</button>
 
+
+        </div>
+        <div class="text-nowrap float-end">
+            <!--            Кнопки входа и регистрации, видны только неавторизованноым юзерам-->
             <ul class="main-nav px-4">
-                <li class="nav-item text-nowrap">
-                    <a class="cd-signin" href="#0">Вход</a>
-                    <a class="cd-signup" href="#0">Регистрация</a>
-                    <button class="default" href="/logout" style="height: 32px; width: 80px">Выйти</button>
+                <li class="nav-item text-nowrap text-center">
+                    <a th:unless="${#authorization.expression('isAuthenticated()')}" class="cd-signin">Вход</a></li>
+                <li class="nav-item text-nowrap text-center">
+                    <a th:unless="${#authorization.expression('isAuthenticated()')}"
+                       class="cd-signup">Регистрация</a></li>
+            </ul>
+            <!--            Кнопка выхода и приветствие-ссылка на страницу юзера. Видны только авторизованному пользователю-->
+            <ul class="px-4">
+                <li th:if="${#authorization.expression('isAuthenticated()')}"
+                    class="nav-item text-nowrap text-center text-white">
+                    <span>Привет,&nbsp;
+                    <a style="color: white; text-decoration: underline"
+                       th:href="@{/user/{id}(id=${activeUser.getId()})}"><span
+                            th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <button
+                            class="default text-white text-center" onclick="location.href='/logout'" type="button"
+                            style="height: 32px; width: 80px">Выйти
+                    </button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="grid" id ="main">
+<div class="grid" id="main">
     <div class="row">
         <div class="col-2">
+            <div class="btn-group-vertical">
+                <button th:if="${#authorization.expression('hasAnyAuthority(''MODERATOR'')')}" type="button"
+                        class="default text-white text-center" onclick="location.href='/moderation'">Модерация
+                </button>
+                <button th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" type="button"
+                        class="default text-white text-center" onclick="location.href='/#'">Администрация
+                </button>
+            </div>
             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                 <ul th:each="category : ${mainPageDto.getCategoryDto()}">
-                    <button type="button" class="default" href="#"><li th:text="${category.getName()}"></li></button>
+                    <button type="button" class="default" href="#">
+                        <li th:text="${category.getName()}"></li>
+                    </button>
                 </ul>
             </div>
         </div>
@@ -110,12 +151,16 @@
                                 </div>
                                 <div class="card-body">
 
-                                        <td>
-                                            <img th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
-                                        </td>
+                                    <td>
+                                        <img th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
+                                    </td>
 
-                                    <p class="card-text"><li th:text="${item.getPrice}"></li></p>
-                                    <p class="card-text"><li th:text="${item.getDescription}"></li></p>
+                                    <p class="card-text">
+                                    <li th:text="${item.getPrice}"></li>
+                                    </p>
+                                    <p class="card-text">
+                                    <li th:text="${item.getDescription}"></li>
+                                    </p>
                                     <button type="button" class="default" href="#">В корзину</button>
                                 </div>
                             </div>
@@ -140,7 +185,9 @@
                         </div>
                         <div class="card-body">
                             <img th:src="@{'data:image/jpeg;base64,'+${shop.getLogo().getPictureBase64()}}">
-                            <p class="card-text"><li th:text="${shop.getDescription}"></li></p>
+                            <p class="card-text">
+                            <li th:text="${shop.getDescription}"></li>
+                            </p>
                             <button type="button" class="default" href="#">Перейти</button>
                         </div>
                     </div>
@@ -153,24 +200,32 @@
     <div class="cd-user-modal"> <!-- все формы на фоне затемнения-->
         <div class="cd-user-modal-container"> <!-- основной контейнер -->
             <ul class="cd-switcher">
-                <li><a href="#0" id="enter-login">Вход</a></li>
-                <li><a href="#0">Регистрация</a></li>
+                <li><a id="enter-login">Вход</a></li>
+                <li><a>Регистрация</a></li>
             </ul>
 
             <div id="cd-login"> <!-- форма входа -->
-                <form class="cd-form">
-                    <p class="fieldset">
+                <form class="cd-form" th:action="@{/perform_login}" th:method="POST">
+                    <div th:if="${param.error}">
+                        Неверный логин или пароль.
+                    </div>
+                    <div th:if="${param.logout}">
+                        Вы вышли из системы.
+                    </div>
                     <div id="div-finish"></div>
+                    <p class="fieldset">
                         <label class="image-replace cd-username" for="signin-username">E-mail</label>
-                        <input class="full-width has-padding has-border" id="signin-username" type="text" placeholder="Username">
-                        <span class="cd-error-message">Здесь сообщение об ошибке!</span>
+                        <input class="full-width has-padding has-border" id="signin-username" type="text"
+                               name="username" placeholder="Имя">
+                        <!--                        <span class="cd-error-message">Здесь сообщение об ошибке!</span>-->
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signin-password">Пароль</label>
-                        <input class="full-width has-padding has-border" id="signin-password" type="text"  placeholder="Пароль">
-                        <a href="#0" class="hide-password">Скрыть</a>
-                        <span class="cd-error-message">Здесь сообщение об ошибке!</span>
+                        <input class="full-width has-padding has-border" id="signin-password" type="text"
+                               name="password" placeholder="Пароль">
+                        <a class="hide-password">Скрыть</a>
+                        <!--                        <span class="cd-error-message">Здесь сообщение об ошибке!</span>-->
                     </p>
 
                     <p class="fieldset">
@@ -178,55 +233,63 @@
                         <label for="remember-me">Запомнить меня</label>
                     </p>
 
-                    <p class="fieldset">
-                        <input class="full-width" type="submit" value="Войти">
+                    <p class="fieldset text-center">
+                        <button class="default text-white text-center full-width" type="submit" value="Войти">Войти
+                        </button>
                     </p>
                 </form>
 
-                <p class="cd-form-bottom-message"><a href="#0">Забыли свой пароль?</a></p>
+                <p class="cd-form-bottom-message"><a>Забыли свой пароль?</a></p>
                 <!-- <a href="#0" class="cd-close-form">Close</a> -->
             </div> <!-- cd-login -->
 
             <div id="cd-signup"> <!-- форма регистрации -->
                 <form class="cd-form" id="defaultSomeForm" content="a" name="defaultSomeForm">
                     <p class="fieldset">
-                        <div id="div-error"></div>
+                        <!--                    <div id="div-error"></div>-->
                         <label class="image-replace cd-username" for="signup-username">Имя пользователя</label>
-                        <input class="full-width has-padding has-border" id="signup-username" type="text" placeholder="Имя пользователя">
+                        <input class="full-width has-padding has-border" id="signup-username" type="text"
+                               name="signup-username" placeholder="Имя пользователя">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-email" for="signup-email">E-mail</label>
-                        <input class="full-width has-padding has-border" id="signup-email" type="email" placeholder="E-mail">
+                        <input class="full-width has-padding has-border" id="signup-email" type="email"
+                               name="signup-email" placeholder="E-mail">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signup-password">Пароль</label>
-                        <input class="full-width has-padding has-border" id="signup-password" type="password"  placeholder="Пароль">
+                        <input class="full-width has-padding has-border" id="signup-password" type="password"
+                               name="signup-password" placeholder="Пароль">
                         <a href="#0" class="hide-password">Скрыть</a>
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="second-password">Пароль</label>
-                        <input class="full-width has-padding has-border" id="second-password" type="password"  placeholder="Повторите пароль">
+                        <input class="full-width has-padding has-border" id="second-password" type="password"
+                               name="second-password" placeholder="Повторите пароль">
                         <a href="#0" class="hide-password">Скрыть</a>
                     <div id="divCheckPassword"></div>
                     </p>
                     <p class="fieldset">
                         <label class="image-replace cd-firstName" for="signup-firstName">Имя</label>
-                        <input class="full-width has-padding has-border" id="signup-firstName" type="text"  placeholder="Имя">
+                        <input class="full-width has-padding has-border" id="signup-firstName" type="text"
+                               name="signup-firstName" placeholder="Имя">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
                     <p class="fieldset">
                         <label class="image-replace cd-lastName" for="signup-lastName">Фамилия</label>
-                        <input class="full-width has-padding has-border" id="signup-lastName" type="text"  placeholder="Фамилия">
+                        <input class="full-width has-padding has-border" id="signup-lastName" type="text"
+                               name="signup-lastName" placeholder="Фамилия">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
                     <p class="fieldset">
                         <label class="image-replace cd-birthday" for="signup-birthday">Дата рождения</label>
-                        <input class="full-width has-padding has-border" id="signup-birthday" type="date"  placeholder="Дата рождения">
+                        <input class="full-width has-padding has-border" id="signup-birthday" type="date"
+                               name="signup-birthday" placeholder="Дата рождения">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
                     <p class="fieldset">
@@ -243,8 +306,11 @@
                         <label for="accept-terms">Я согласен с <a href="#0">Условиями</a></label>
                     </p>
 
-                    <p class="fieldset">
-                        <input class="full-width has-padding" type="submit" id="addNewUserButton" value="Создать аккаунт">
+                    <p class="fieldset text-center">
+                        <button class="default text-white text-center full-width" type="button" id="addNewUserButton"
+                                onclick="addNewUser()"
+                                value="Создать аккаунт">Создать аккаунт
+                        </button>
                     </p>
                 </form>
 
@@ -252,12 +318,14 @@
             </div> <!-- cd-signup -->
 
             <div id="cd-reset-password"> <!-- форма восстановления пароля -->
-                <p class="cd-form-message">Забыли пароль? Пожалуйста, введите адрес своей электронной почты. Вы получите ссылку, чтобы создать новый пароль.</p>
+                <p class="cd-form-message">Забыли пароль? Пожалуйста, введите адрес своей электронной почты. Вы получите
+                    ссылку, чтобы создать новый пароль.</p>
 
                 <form class="cd-form">
                     <p class="fieldset">
                         <label class="image-replace cd-email" for="reset-email">E-mail</label>
-                        <input class="full-width has-padding has-border" id="reset-email" type="email" placeholder="E-mail">
+                        <input class="full-width has-padding has-border" id="reset-email" type="email"
+                               placeholder="E-mail">
                         <span class="cd-error-message">Здесь сообщение об ошибке!</span>
                     </p>
 
@@ -272,8 +340,6 @@
         </div> <!-- cd-user-modal-container -->
     </div>
 </div><!-- cd-user-modal -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="js/main.js"></script> <!-- Gem jQuery -->
-<script type="text/javascript" src="search.js"></script>
+
 </body>
 </html>

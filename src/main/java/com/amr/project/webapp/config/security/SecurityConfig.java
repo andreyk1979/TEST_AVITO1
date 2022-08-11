@@ -46,19 +46,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-              .authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    .antMatchers("/sales", "/shop/**/description", "/", "/login").permitAll()
-                    .antMatchers("/moderation/**").hasAuthority("MODERATOR")
-                    .antMatchers("/user/**", "/chat/**", "/shop/registration/**").hasAuthority("USER")
-                    .antMatchers("/**").hasAuthority("ADMIN")
-              .anyRequest().authenticated()
+                .authorizeRequests()
+                .antMatchers("/moderation/**").hasAnyAuthority("MODERATOR", "ADMIN")
+                // Модератору временно разрешено просматривать информацию о юзере. Юзеру необходимо создать публичную страницу, которую смогут просматривать все.
+                .antMatchers("/user/**", "/chat/**", "/shop/registration/**").hasAnyAuthority("USER", "MODERATOR", "ADMIN")
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .authenticationDetailsSource(customWebAuthenticationDetailsSource)
+                .formLogin()
+                .loginPage("/")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/", true)
+                .authenticationDetailsSource(customWebAuthenticationDetailsSource)
                 .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
+                .logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                    .csrf().disable();
+                .csrf().disable();
     }
 
     @Override
