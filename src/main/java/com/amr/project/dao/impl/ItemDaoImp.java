@@ -24,17 +24,18 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
         return query.setMaxResults(size).getResultList();
     }
 
-
+    @Override
     public List<Item> getFourMostPopularItem() {
         return em.createQuery("select s from Item s order by s.rating DESC")
                 .setMaxResults(4).getResultList();
     }
 
     @Override
-    public void isPretendedToBeDeleted(Long id) {
-        em.createQuery("update Item set isPretendedToBeDeleted = :boolParam WHERE Item.id = :id")
+    public void pretendToDelete(Long id) {
+        Query query = em.createQuery("update Item set isPretendedToBeDeleted = :boolParam WHERE Item.id = :id")
                 .setParameter("boolParam", true)
                 .setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
@@ -63,8 +64,7 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
 
     @Override
     public List<Item> getItemsToBeModerated() {
-
-        return em.createQuery("from Item where is_moderated = false").getResultList();
+        return em.createQuery("from Item where Item.isModerated = false").getResultList();
     }
 
 }
