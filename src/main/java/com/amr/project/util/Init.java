@@ -32,14 +32,13 @@ public class Init {
     @Transactional
     public void toDoTable() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        createUser(entityManager);
+        createUsers(entityManager);
         createCountry(entityManager);
         createCity(entityManager);
         createAddress(entityManager);
         createPersonalData(entityManager);
         updateUsers(entityManager);
         createShop(entityManager);
-        createUserInfo(entityManager);
         createCategories(entityManager);
         createItems(entityManager);
         createCartItem(entityManager);
@@ -52,7 +51,7 @@ public class Init {
         entityManager.close();
     }
 
-    private  void createSalesHistory(EntityManager entityManager) {
+    private void createSalesHistory(EntityManager entityManager) {
         entityManager.getTransaction().begin();
 
         SalesHistory salesHistory = SalesHistory.builder()
@@ -76,28 +75,49 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    private void createUser(EntityManager entityManager) {
+    private void createUsers(EntityManager entityManager) {
         entityManager.getTransaction().begin();
 
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword("$2a$12$rVSFwHHXB50zBZLE8SFLfO3hXzZ3F.TcR.qjlskgfZz3.KGwZL4Si");//"user"
-        user.setActivate(true);
-        user.setImage(entityManager.find(Image.class, 29L));
+        User user = User.builder()
+                .phone("88004762828")
+                .firstName("Oleg")
+                .lastName("Sidorov")
+                .age(26)
+                .gender(Gender.MALE)
+                .birthday(Calendar.getInstance())
+                .username("user")
+                .password("$2a$12$rVSFwHHXB50zBZLE8SFLfO3hXzZ3F.TcR.qjlskgfZz3.KGwZL4Si")
+                .activate(true)
+                .image(entityManager.find(Image.class, 29L))
+                .build();
         entityManager.persist(user);
 
-        User moderator = new User();
-        moderator.setUsername("moderator");
-        moderator.setPassword("$2a$12$ZZ5VTLg6s/LP395v4c0F2ugZKCvc8v9.13ZrKRbp00.IGBcDAkxwy");//"moderator"
-        moderator.setActivate(true);
-        moderator.setImage(entityManager.find(Image.class, 30L));
+        User moderator = User.builder()
+                .phone("86004773828")
+                .firstName("Anna")
+                .lastName("Ivanova")
+                .age(40)
+                .gender(Gender.FEMALE)
+                .birthday(Calendar.getInstance())
+                .username("moderator")
+                .password("$2a$12$ZZ5VTLg6s/LP395v4c0F2ugZKCvc8v9.13ZrKRbp00.IGBcDAkxwy")
+                .activate(true)
+                .image(entityManager.find(Image.class, 30L))
+                .build();
         entityManager.persist(moderator);
 
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword("$2a$12$wGD67O3JNEWnl.ZLjEkSdeGd2pr8JzHtpw7KYj.1sT7wgcJzPYH36");//admin
-        admin.setActivate(true);
-        admin.setImage(entityManager.find(Image.class, 28L));
+        User admin = User.builder()
+                .phone("87004773828")
+                .firstName("Rick")
+                .lastName("Sanchez")
+                .age(40)
+                .gender(Gender.FEMALE)
+                .birthday(Calendar.getInstance())
+                .username("admin")
+                .password("$2a$12$wGD67O3JNEWnl.ZLjEkSdeGd2pr8JzHtpw7KYj.1sT7wgcJzPYH36")
+                .activate(true)
+                .image(entityManager.find(Image.class, 28L))
+                .build();
         entityManager.persist(admin);
 
         entityManager.getTransaction().commit();
@@ -238,7 +258,6 @@ public class Init {
         entityManager.merge(admin);
 
         entityManager.getTransaction().commit();
-
     }
 
     private void createShop(EntityManager entityManager) {
@@ -256,42 +275,6 @@ public class Init {
         Image image = entityManager.find(Image.class, 1L);
         image.setShop(shop);
         entityManager.persist(shop);
-
-        entityManager.getTransaction().commit();
-    }
-
-    private void createUserInfo(EntityManager entityManager) {
-        entityManager.getTransaction().begin();
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUser(entityManager.find(User.class, 1L));
-        userInfo.setPhone("88004762828");
-        userInfo.setAge(26);
-        userInfo.setGender(Gender.MALE);
-        userInfo.setFirstName("Oleg");
-        userInfo.setLastName("Sidorov");
-        userInfo.setBirthday(Calendar.getInstance());
-        entityManager.persist(userInfo);
-
-        UserInfo moderatorInfo = new UserInfo();
-        moderatorInfo.setUser(entityManager.find(User.class, 2L));
-        moderatorInfo.setPhone("86004773828");
-        moderatorInfo.setAge(40);
-        moderatorInfo.setGender(Gender.FEMALE);
-        moderatorInfo.setFirstName("Anna");
-        moderatorInfo.setLastName("Ivanova");
-        moderatorInfo.setBirthday(Calendar.getInstance());
-        entityManager.persist(moderatorInfo);
-
-
-        UserInfo adminInfo = new UserInfo();
-        adminInfo.setUser(entityManager.find(User.class, 3L));
-        adminInfo.setPhone("87004773828");
-        adminInfo.setAge(40);
-        adminInfo.setGender(Gender.FEMALE);
-        adminInfo.setFirstName("Rick");
-        adminInfo.setLastName("Sanchez");
-        adminInfo.setBirthday(Calendar.getInstance());
-        entityManager.persist(adminInfo);
 
         entityManager.getTransaction().commit();
     }
@@ -354,8 +337,7 @@ public class Init {
         reviewOfItem2.setItem(tv2);
         reviewOfItem2.setShop(entityManager.find(Shop.class, 1L));
         reviewOfItem2.setRating(9);
-        reviewOfItem2.setDignity("1. Хорошая яркость" +
-                "2. Отлинчый звук");
+        reviewOfItem2.setDignity("1. Хорошая яркость" + "2. Отлинчый звук");
         reviewOfItem2.setText("Привезли быстро, спасибо!");
         reviewOfItem2.setUser(entityManager.find(User.class, 2L));
         reviewOfItem2.setModerateAccept(true);
@@ -698,4 +680,5 @@ public class Init {
 
         entityManager.getTransaction().commit();
     }
+
 }
