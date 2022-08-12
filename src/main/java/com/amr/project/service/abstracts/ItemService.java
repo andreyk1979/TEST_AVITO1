@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ItemService extends ReadWriteService<Item, Long> {
 
-    void isPretendedToBeDeleted(Long id);
+    void pretendToDelete(Long id);
 
     List<Item> getItemForShop (Long shopId);
 

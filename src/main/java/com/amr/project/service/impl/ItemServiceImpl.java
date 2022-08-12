@@ -23,9 +23,8 @@ public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements
 
     @Override
     @Transactional
-    public void isPretendedToBeDeleted(Long id) {
-
-        itemRepository.isPretendedToBeDeleted(id);
+    public void pretendToDelete(Long id) {
+        itemRepository.pretendToDelete(id);
     }
     
     @Override

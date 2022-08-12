@@ -13,7 +13,7 @@ public interface ItemDao extends ReadWriteDao<Item, Long> {
 
     List<Item> getFourMostPopularItem();
 
-    void isPretendedToBeDeleted(Long id);
+    void pretendToDelete(Long id);
 
     List<Item> getItemForShop (Long shopId);
 
