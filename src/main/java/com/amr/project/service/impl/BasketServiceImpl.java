@@ -32,7 +32,7 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
     @Transactional
     @Override
     public void clear(Long id) {
-        Basket basket = basketDao.findById(id);
+        Basket basket = super.findById(id);
         basket.setItemsCount(new HashMap<>());
         basketDao.update(basket);
     }
@@ -40,7 +40,7 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
     @Transactional
     @Override
     public void updateItemsCounts(Long id, List<ItemCountPosition> positions) {
-        Basket basket = basketDao.findById(id);
+        Basket basket = super.findById(id);
         basket.setItemsCount(new HashMap<>());
         positions.forEach(el -> basket.getItemsCount().put(el.getItem(), el.getCountInBasket()));
         basketDao.update(basket);
@@ -49,7 +49,7 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
     @Transactional
     @Override
     public void changeOneItemCount(Long id, ItemCountPosition position) {
-        Basket basket = basketDao.findById(id);
+        Basket basket = super.findById(id);
         basket.getItemsCount().merge(position.getItem(), position.getCountInBasket(), Integer::sum);
         basketDao.update(basket);
     }
@@ -58,7 +58,7 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
     @Override
     public int decreaseOrDeleteOneItemCount(Long id, ItemCountPosition position) {
 
-        Basket basket = basketDao.findById(id);
+        Basket basket = super.findById(id);
         int countInBasket;
         try {
             countInBasket = basket.getItemsCount().get(position.getItem());
@@ -76,7 +76,7 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
     @Override
     @Transactional
     public void deleteOneItemCount(Long id, Item item) {
-        Basket basket = basketDao.findById(id);
+        Basket basket = super.findById(id);
         basket.getItemsCount().remove(item);
         basketDao.update(basket);
     }
