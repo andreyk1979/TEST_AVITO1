@@ -7,4 +7,6 @@ public interface UserDao extends ReadWriteDao<User, Long>{
     boolean addUser(User user);
     User findByUserName(String username);
     boolean existByUserName(String userName);
+
+    User findByEmail(String email);
 }

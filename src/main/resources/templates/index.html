@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="520615765928-5gbho3qf7bd565eeskrh1lnml1cvpb02.apps.googleusercontent.com">
     <title>Авито 2.0</title>
 
     <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
@@ -13,6 +14,9 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="js/main.js"></script> <!-- Gem jQuery -->
     <script type="/text/javascript" src="/search.js"></script>
+    <script type="/text/javascript" src="/js/googleAuth.js"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="console.log('TODO: add onload function')">
+    </script>
     <link rel="stylesheet" href="/webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 
@@ -232,6 +236,9 @@
                         <input type="checkbox" id="remember-me" checked>
                         <label for="remember-me">Запомнить меня</label>
                     </p>
+                    <div>
+                        <h4><a th:href="@{/oauth2/authorization/google}">Войти с помощью Google</a></h4>
+                    </div>
 
                     <p class="fieldset text-center">
                         <button class="default text-white text-center full-width" type="submit" value="Войти">Войти
@@ -301,6 +308,7 @@
                             <option value="UNKNOWN" text="UNKNOWN">UNKNOWN</option>
                         </select>
                     </p>
+
                     <p class="fieldset">
                         <input type="checkbox" id="accept-terms">
                         <label for="accept-terms">Я согласен с <a href="#0">Условиями</a></label>
@@ -311,6 +319,9 @@
                                 onclick="addNewUser()"
                                 value="Создать аккаунт">Создать аккаунт
                         </button>
+                    <div>
+                        <h4><a th:href="@{/oauth2/authorization/google}">Войти с помощью Google</a></h4>
+                    </div>
                     </p>
                 </form>
 

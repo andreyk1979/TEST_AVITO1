@@ -57,4 +57,10 @@ public class UserDaoImp extends ReadWriteDaoImpl<User,Long> implements UserDao {
         }
         return true;
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return Util.getSingleResult(em.createQuery("select u from User u where u.email=:email",User.class)
+                .setParameter("email",email));
+    }
 }
