@@ -28,12 +28,12 @@ public class CountRestValidator implements ConstraintValidator<LessThenRest, Ite
     @Override
     // узнаем актуальный остаток Item в БД и сравниваем с запрошенным + имеющимся в корзине
     public boolean isValid(ItemCountPositionDto itemCountPositionDto, ConstraintValidatorContext constraintValidatorContext) {
-        int actualCountRest = (itemDao.findById(itemCountPositionDto.getItem().getId())).getCount();
+        int actualCountRest = (itemDao.findById(itemCountPositionDto.getItem().getId())).orElseThrow().getCount();
         int requestedCount = itemCountPositionDto.getCountInBasket();
         int countInBasket;
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Basket basket = basketDao.findById(user.getId());
+            Basket basket = basketDao.findById(user.getId()).orElseThrow();
             countInBasket = basket.getItemsCount().get(itemMapper.toModel(itemCountPositionDto.getItem()));
         } catch (NullPointerException ex) {
             countInBasket = 0;
