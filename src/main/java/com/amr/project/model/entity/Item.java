@@ -1,12 +1,7 @@
 package com.amr.project.model.entity;
 
 import com.amr.project.model.entity.report.SalesHistory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
@@ -34,6 +29,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -151,6 +147,6 @@ public class Item {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }

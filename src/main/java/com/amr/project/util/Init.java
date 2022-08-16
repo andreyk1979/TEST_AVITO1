@@ -2,20 +2,16 @@ package com.amr.project.util;
 
 import com.amr.project.model.entity.*;
 import com.amr.project.model.entity.report.SalesHistory;
-import com.amr.project.model.enums.Gender;
-import com.amr.project.model.enums.PersonalDataStatus;
-import com.amr.project.model.enums.Roles;
-import com.amr.project.model.enums.Status;
+import com.amr.project.model.enums.*;
+import com.amr.project.service.abstracts.BasketService;
+import com.amr.project.service.impl.BasketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -48,6 +44,7 @@ public class Init {
         createCouponAndDiscount(entityManager);
         createSalesHistory(entityManager);
         createChat(entityManager);
+        createBasket(entityManager);
         entityManager.close();
     }
 
@@ -627,6 +624,7 @@ public class Init {
         order.setStatus(Status.SENT);
         order.setOrderDate(Calendar.getInstance());
         order.setExpectedDeliveryDate(Calendar.getInstance());
+        order.setExpectedDeliveryDate(Calendar.getInstance());
         Item item1 = entityManager.find(Item.class, 4L);
         Item item2 = entityManager.find(Item.class, 7L);
         order.setGrandTotal(item2.getPrice().add(item1.getPrice()));
@@ -651,9 +649,13 @@ public class Init {
         entityManager.getTransaction().begin();
 
         Coupon coupon = new Coupon();
-        coupon.setUser(entityManager.find(User.class, 1L));
-        coupon.setEnd(Calendar.getInstance());
+        coupon.setUser(entityManager.find(User.class, 2L));
         coupon.setStart(Calendar.getInstance());
+
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.YEAR, 1);
+        coupon.setEnd(endDate);
+        coupon.setDiscount(5);
         List<Coupon> coupons = new ArrayList<>();
         coupons.add(coupon);
         Shop shop = entityManager.find(Shop.class, 1L);
@@ -681,4 +683,34 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
+    private void createBasket(EntityManager entityManager) {
+        entityManager.getTransaction().begin();
+
+        User user1 = entityManager.find(User.class, 1L);
+        User user2 = entityManager.find(User.class, 2L);
+        User user3 = entityManager.find(User.class, 3L);
+
+        user1.setBasket(new Basket(user1));
+        user2.setBasket(new Basket(user2));
+        user3.setBasket(new Basket(user3));
+
+        Item item1 = entityManager.find(Item.class, 1L);
+        Item item2 = entityManager.find(Item.class, 2L);
+        Item item3 = entityManager.find(Item.class, 3L);
+        Item item4 = entityManager.find(Item.class, 4L);
+        Item item5 = entityManager.find(Item.class, 5L);
+        Item item6 = entityManager.find(Item.class, 6L);
+
+        user1.getBasket().getItemsCount().put(item1, 2);
+        user1.getBasket().getItemsCount().put(item2, 1);
+        user1.getBasket().getItemsCount().put(item3, 2);
+        user1.getBasket().getItemsCount().put(item4, 5);
+
+        user2.getBasket().getItemsCount().put(item1, 3);
+        user2.getBasket().getItemsCount().put(item4, 5);
+        user2.getBasket().getItemsCount().put(item5, 2);
+        user2.getBasket().getItemsCount().put(item6, 1);
+
+        entityManager.getTransaction().commit();
+    }
 }

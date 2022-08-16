@@ -114,6 +114,10 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Favorite favorite;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Basket basket = new Basket(this);
+
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Address address;

@@ -16,3 +16,4 @@ public class Mail {
     private String text;
 
 }
+
