@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {AddressMapper.class, ImageMapper.class, ReviewMapper.class, FeedbackMapper.class, FavoriteMapper.class, DiscountMapper.class},
+        uses = {AddressMapper.class, ImageMapper.class, ReviewMapper.class, FeedbackMapper.class, FavoriteMapper.class, DiscountMapper.class,ItemMapper.class},
         imports = {Calendar.class, Date.class, LocalDate.class, ZoneId.class, Coupon.class, UUID.class, Collectors.class, Order.class, Shop.class, Chat.class})
 public interface UserMapper {
 

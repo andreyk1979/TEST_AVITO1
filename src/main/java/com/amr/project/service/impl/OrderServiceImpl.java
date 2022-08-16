@@ -16,4 +16,9 @@ public class OrderServiceImpl extends ReadWriteServiceImpl<Order, Long> implemen
     public OrderServiceImpl(@Qualifier("orderDaoImpl") ReadWriteDao<Order, Long> dao) {
         super(dao);
     }
+
+    @Override
+    public Order findAllNotActual() {
+        return null;
+    }
 }

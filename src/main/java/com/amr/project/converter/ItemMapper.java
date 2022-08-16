@@ -4,6 +4,7 @@ import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.entity.Item;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         uses = {ImageMapper.class, ReviewMapper.class, CategoryMapper.class})
 public interface ItemMapper {
-
     ItemDto toDto(Item item);
 
     Item toModel(ItemDto itemDto);

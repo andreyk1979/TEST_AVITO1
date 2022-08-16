@@ -8,13 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -35,9 +31,16 @@ public class Coupon {
     @Column(name = "start")
     private Calendar start;
 
+    @Future(message = "Дата окончания должна быть позднее текущей даты")
     @Column(name = "end")
     private Calendar end;
 
+    @Column(name = "isUsed", nullable = false)
+    private boolean isUsed = false;
+
+    @Min(value=0, message = "Скидка должна быть болльше 0")
+    @Column(name = "discount", nullable = false)
+    private int discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude

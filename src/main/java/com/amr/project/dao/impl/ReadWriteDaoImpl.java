@@ -15,8 +15,7 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
 
     @SuppressWarnings("unchecked")
     public ReadWriteDaoImpl() {
-        this.clazz = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass())
+        this.clazz = (Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass() )
                 .getActualTypeArguments()[0];
     }
 

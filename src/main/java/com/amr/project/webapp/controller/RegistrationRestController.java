@@ -16,14 +16,15 @@ public class RegistrationRestController {
 
     private final UserService userService;
 
+    @Autowired
     public RegistrationRestController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping()
     @ResponseBody
-    public ResponseEntity addUser(@RequestBody UserDto userDto) {
-        if (!userService.addUser(userDto)) {
+       public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
+        if(!userService.addUser(userDto)) {
             return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
         return new ResponseEntity<>(HttpStatus.OK);
