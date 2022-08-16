@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements ItemService{
+public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements ItemService {
 
     protected final ItemDao itemRepository;
 
@@ -19,6 +19,16 @@ public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements
     public ItemServiceImpl(ReadWriteDao<Item, Long> dao, ItemDao itemRepository) {
         super(dao);
         this.itemRepository = itemRepository;
+    }
+
+    @Override
+    public List<Item> getTwoMostPopularItemForShop(Long shopId) {
+        return itemRepository.getTwoMostPopularItemForShop(shopId);
+    }
+
+    @Override
+    public List<Item> getItemsToBeModerated() {
+        return itemRepository.getItemsToBeModerated();
     }
 
     @Override
