@@ -64,7 +64,7 @@ public class ItemDaoImp extends ReadWriteDaoImpl<Item, Long> implements ItemDao 
 
     @Override
     public List<Item> getItemsToBeModerated() {
-        return em.createQuery("from Item where Item.isModerated = false").getResultList();
+        return em.createQuery("from Item i where i.isModerated = false").getResultList();
     }
 
 }

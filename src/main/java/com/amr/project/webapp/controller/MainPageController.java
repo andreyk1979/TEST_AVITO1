@@ -3,6 +3,9 @@ package com.amr.project.webapp.controller;
 import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.MainPageService;
 import com.amr.project.service.abstracts.UserService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,13 +25,7 @@ public class MainPageController {
     }
 
     @GetMapping("/")
-    public String getMainPage(Model model, Principal principal) {
-        User user = null;
-        if (principal != null) {
-            user = userService.findByUsername(principal.getName());
-            // Замена первой буквы имени на заглавную для корректного отображения в приветствии на фронте.
-            user.setUsername(user.getUsername().substring(0, 1).toUpperCase() + user.getUsername().substring(1));
-        }
+    public String getMainPage(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute(mainPageService.getMainPageDto());
         model.addAttribute("activeUser", user);
         return "index";

@@ -10,6 +10,7 @@ import com.amr.project.service.abstracts.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,14 +55,8 @@ public class UserPageController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Метод showUserPage", notes = "Метод showUserPage принимает id пользователя из БД" +
             " и возвращает html страницу userPage, которая содержит описание пользователя: его личные данные, фотографию, список заказов и магазинов")
-    public String showUserPage(@PathVariable Long id, Model model, Principal principal) throws UnsupportedEncodingException {
+    public String showUserPage(@PathVariable Long id, Model model, @AuthenticationPrincipal User user) throws UnsupportedEncodingException {
 
-        User user = null;
-        if (principal != null) {
-            user = userService.findByUsername(principal.getName());
-            // Замена первой буквы имени на заглавную для корректного отображения в приветствии на фронте.
-            user.setUsername(user.getUsername().substring(0, 1).toUpperCase() + user.getUsername().substring(1));
-        }
         model.addAttribute("activeUser", user);
 
         // Информация о юзере

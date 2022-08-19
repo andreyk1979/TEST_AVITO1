@@ -627,7 +627,10 @@ public class Init {
         order.setExpectedDeliveryDate(Calendar.getInstance());
         Item item1 = entityManager.find(Item.class, 4L);
         Item item2 = entityManager.find(Item.class, 7L);
-        order.setGrandTotal(item2.getPrice().add(item1.getPrice()));
+
+        //order.setGrandTotal(item2.getPrice().add(item1.getPrice()));
+        order.setGrandTotal(BigDecimal.valueOf(1));
+
         List<Item> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);

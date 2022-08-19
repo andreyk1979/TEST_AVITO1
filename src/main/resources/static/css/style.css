@@ -549,3 +549,8 @@ xsigin/signup popup
 #cd-login.is-selected, #cd-signup.is-selected, #cd-reset-password.is-selected {
   display: block;
 }
+
+.cd-card-img {
+  max-width: 200px;
+  max-height: 200px;
+}
