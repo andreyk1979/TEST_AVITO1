@@ -45,7 +45,6 @@ public class BasketController {
             return "redirect:/";
         }
         UserDto userDto = userMapper.toDto(user);
-        Basket basket =  basketService.findById(userDto.getId());
         BasketDto basketDto = basketMapper.toDto(basketService.findById(user.getId()));
         model.addAttribute("userDto", userDto);
         model.addAttribute("basketDto", basketDto);

@@ -20,13 +20,11 @@ public class BasketServiceImpl extends ReadWriteServiceImpl<Basket,Long> impleme
 
     private final BasketDao basketDao;
     private final UserDao userDao;
-    private final ItemDao itemDao;
     @Autowired
-    public BasketServiceImpl(BasketDao basketDao, UserDao userDao, ItemDao itemDao) {
+    public BasketServiceImpl(BasketDao basketDao, UserDao userDao) {
         super(basketDao);
         this.basketDao = basketDao;
         this.userDao = userDao;
-        this.itemDao = itemDao;
     }
 
     @Transactional

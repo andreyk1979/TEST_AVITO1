@@ -102,7 +102,7 @@ public class BasketRestController {
     @ApiOperation(value= "Метод updateItem", notes= "Метод принимает JSON List<ItemCountPositionDto> " +
             "(из Item нужен только id) валидирует поля countInBasket,заменяет позиции в корзине или " +
             "возвращает ошибку валидации")
-    @PutMapping("/items")
+    @PutMapping("/items/")
     @Validated({OnAdd.class, OnDec.class})
     public ResponseEntity<HttpStatus> updateItems(@AuthenticationPrincipal User user,
                                         @Valid @RequestBody List<ItemCountPositionDto> itemCountPositionDtos) {

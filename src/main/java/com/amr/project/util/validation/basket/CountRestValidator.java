@@ -5,6 +5,7 @@ import com.amr.project.dao.abstracts.BasketDao;
 import com.amr.project.dao.abstracts.ItemDao;
 import com.amr.project.model.dto.ItemCountPositionDto;
 import com.amr.project.model.entity.Basket;
+import com.amr.project.model.entity.Item;
 import com.amr.project.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,9 @@ public class CountRestValidator implements ConstraintValidator<LessThenRest, Ite
     @Override
     // узнаем актуальный остаток Item в БД и сравниваем с запрошенным + имеющимся в корзине
     public boolean isValid(ItemCountPositionDto itemCountPositionDto, ConstraintValidatorContext constraintValidatorContext) {
-        int actualCountRest = (itemDao.findById(itemCountPositionDto.getItem().getId())).orElseThrow().getCount();
+
+        Item item = itemDao.findById(itemCountPositionDto.getItem().getId()).orElseThrow();
+        int actualCountRest = item.getCount();
         int requestedCount = itemCountPositionDto.getCountInBasket();
         int countInBasket;
         try {

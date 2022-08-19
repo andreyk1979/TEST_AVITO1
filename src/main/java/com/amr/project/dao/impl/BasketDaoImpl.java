@@ -10,9 +10,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BasketDaoImpl extends ReadWriteDaoImpl<Basket, Long> implements BasketDao {
 
-    UserDao userDao;
-    @Autowired
-    public BasketDaoImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
 }
