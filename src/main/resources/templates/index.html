@@ -12,7 +12,8 @@
     <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/main.js"></script> <!-- Gem jQuery -->
+    <script src="/js/main.js"></script> <!-- Gem jQuery -->
+    <script src="/js/basket.js"></script>
     <script type="/text/javascript" src="/search.js"></script>
     <script type="/text/javascript" src="/js/googleAuth.js"></script>
     <script src="https://accounts.google.com/gsi/client" onload="console.log('TODO: add onload function')">
@@ -56,8 +57,14 @@
 
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px">
+<div th:if="${#authorization.expression('isAuthenticated()')}">
+    <script>
+        jQuery(document).ready(function($){
+            onLoadBasketFill();
+        })
+    </script>
+</div>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px; max-width: 100%">
     <div class="container-fluid">
         <img alt="Logo" src="/logo.jpg" width="30" height="30">
         <a class="navbar-brand" href="/" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
@@ -66,15 +73,20 @@
                 aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse show" id="navbarBasic">
-            <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+            <ul class="navbar-nav mb-2 mb-xl-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#"
+                    <a class="nav-link active" aria-current="page" href="/"
                        style="color: aliceblue; font-family: Harrington; font-size: large">Главная</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#"
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" id="navbarDropdownMenuLinkShops"
                        style="color: aliceblue; font-family: Harrington; font-size: large">Магазины</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkShops"
+                        th:each="shop : ${mainPageDto.getShopDtoList()}">
+                        <li><a class="dropdown-item" th:href="@{/shop/{id}(id=${shop.getId()})}" th:text="${shop.getName()}">Адреса</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -87,19 +99,18 @@
                     </ul>
                 </li>
             </ul>
-            <input class="form-control me-2" input type="search" name="text" placeholder="Поиск товаров..."
-                   aria-label="Поиск товаров..." id="sb" size="50" style="height: 32px">
+            <input class="form-control" input type="search" name="text" placeholder="Поиск товаров..."
+                   aria-label="Поиск товаров..." id="sb" size="50" style="height: 32px; width: 500px">
             <button class="default" type="submit" onclick="test()" style="height: 32px; width: 80px">Найти</button>
-
-
         </div>
+
         <div class="text-nowrap float-end">
             <!--            Кнопки входа и регистрации, видны только неавторизованноым юзерам-->
-            <ul class="main-nav px-4">
+            <ul th:unless="${#authorization.expression('isAuthenticated()')}" class="main-nav px-4">
                 <li class="nav-item text-nowrap text-center">
-                    <a th:unless="${#authorization.expression('isAuthenticated()')}" class="cd-signin">Вход</a></li>
+                    <a class="cd-signin">Вход</a></li>
                 <li class="nav-item text-nowrap text-center">
-                    <a th:unless="${#authorization.expression('isAuthenticated()')}"
+                    <a
                        class="cd-signup">Регистрация</a></li>
             </ul>
             <!--            Кнопка выхода и приветствие-ссылка на страницу юзера. Видны только авторизованному пользователю-->
@@ -108,9 +119,36 @@
                     class="nav-item text-nowrap text-center text-white">
                     <span>Привет,&nbsp;
                     <a style="color: white; text-decoration: underline"
-                       th:href="@{/user/{id}(id=${activeUser.getId()})}"><span
+                       th:href="@{/user/{id}(id=${activeUser.getId()})}"><span class="text-capitalize"
                             th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
                     </span>
+
+<!--                    Корзина-->
+                    <button
+                            class="default text-white text-center" onload="" type="button" id="bucketButton" data-bs-toggle="modal" data-bs-target="#bucketModal"
+                            style="height: 32px; width: 80px">Корзина
+                    </button>
+                    <div class="modal fade" id="bucketModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #009898;">
+                                <h5 class="modal-title" id="exampleModalLabel">Корзина</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table text-center align-middle">
+                                    <tbody id="basketBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" data-bs-dismiss="modal" class="btn btn-danger col-3" onclick="clearTheBasket()">Очистить корзину</button>
+                                <button type="button" class="default col-5" onclick="location.href='basket'">Перейти в корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <button
                             class="default text-white text-center" onclick="location.href='/logout'" type="button"
                             style="height: 32px; width: 80px">Выйти
@@ -156,7 +194,7 @@
                                 <div class="card-body">
 
                                     <td>
-                                        <img th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
+                                        <img class="cd-card-img" th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
                                     </td>
 
                                     <p class="card-text">
@@ -165,7 +203,7 @@
                                     <p class="card-text">
                                     <li th:text="${item.getDescription}"></li>
                                     </p>
-                                    <button type="button" class="default" href="#">В корзину</button>
+                                    <button type="button" class="default" th:onclick="'javascript:addItemToCart(' + ${item.getId()} + ')'">В корзину</button>
                                 </div>
                             </div>
                         </ul>
@@ -188,11 +226,11 @@
                             <li th:text="${shop.getName}"></li>
                         </div>
                         <div class="card-body">
-                            <img th:src="@{'data:image/jpeg;base64,'+${shop.getLogo().getPictureBase64()}}">
+                            <img class="cd-card-img" th:src="@{'data:image/jpeg;base64,'+${shop.getLogo().getPictureBase64()}}">
                             <p class="card-text">
                             <li th:text="${shop.getDescription}"></li>
                             </p>
-                            <button type="button" class="default" href="#">Перейти</button>
+                            <a class="text-white" th:href="@{/shop/{id}(id=${shop.getId()})}"><button type="button" class="default">Перейти</button></a>
                         </div>
                     </div>
                 </ul>

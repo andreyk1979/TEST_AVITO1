@@ -26,12 +26,12 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name="order_by_user")
@@ -78,6 +78,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Address address;
+
+    public Order() {
+        qiwiId = UUID.randomUUID().toString();
+    }
 
     @Override
     public boolean equals(Object o) {

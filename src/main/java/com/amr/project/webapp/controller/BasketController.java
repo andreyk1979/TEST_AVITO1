@@ -39,7 +39,7 @@ public class BasketController {
     }
     @ApiOperation(value = "Метод getBasket",
             notes = "Метод возращает basket.html по id пользователя - корзина покупателя")
-    @GetMapping("/")
+    @GetMapping
     public String getBasket(Model model, @AuthenticationPrincipal User user) {
         if (user == null) { // todo makeev - реализовать логику работы с временной корзиной, если необходимо чтобы неиндентифицированный пользователь мог ей пользоваться
             return "redirect:/";
@@ -49,6 +49,7 @@ public class BasketController {
         BasketDto basketDto = basketMapper.toDto(basketService.findById(user.getId()));
         model.addAttribute("userDto", userDto);
         model.addAttribute("basketDto", basketDto);
+        model.addAttribute("activeUser", user);
         return "/basket";
     }
 }

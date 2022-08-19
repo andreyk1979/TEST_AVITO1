@@ -12,6 +12,7 @@ import com.amr.project.model.entity.User;
 import com.amr.project.service.abstracts.ModerationService;
 import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -53,14 +54,8 @@ public class ModerationController {
     }
 
     @GetMapping()
-    public String showModerationPage(Model model, Principal principal) throws UnsupportedEncodingException {
+    public String showModerationPage(Model model, @AuthenticationPrincipal User user) throws UnsupportedEncodingException {
 
-        User user = null;
-        if (principal != null) {
-            user = userService.findByUsername(principal.getName());
-            // Замена первой буквы имени на заглавную для корректного отображения в приветствии на фронте.
-            user.setUsername(user.getUsername().substring(0, 1).toUpperCase() + user.getUsername().substring(1));
-        }
         model.addAttribute("activeUser", user);
 
         shopsForModel = new HashMap<>();

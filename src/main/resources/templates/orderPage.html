@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Basket</title>
+    <meta charset="UTF-8">
+    <title>Order</title>
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 
     <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
@@ -52,7 +51,6 @@
             margin-top: 10px;
         }
     </style>
-
 
 </head>
 <body>
@@ -126,84 +124,5 @@
 </nav>
 <br>
 <br>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-2">
-            <ul class="nav flex-column nav-pills">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Active</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                </li>
-            </ul>
-        </div>
-        <div class="col-7">
-            <table class="table text-center align-middle">
-                <tbody>
-                <tr th:each="item : ${basketDto.getItemCountPositions()}"
-                    th:id="'itemrowOnBasketPage' + ${item.getItem().getId()}">
-                    <td style="height: 150px" class="align-middle text-wrap"><img
-                            th:onclick="'deleteOneItemFromCartOnBasketPage(' + ${item.getItem().getId()} + ')'"
-                            style="max-width: 20px; max-height: 20px"
-                            src="/img/deleteIcon.png"></td>
-                    <td style="height: 150px" class="align-middle text-wrap"><img
-                            style="max-width: 150px; max-height: 150px"
-                            th:src="@{'data:image/jpeg;base64,'+${item.getItem().getImages().get(0).getPictureBase64()}}">
-                    </td>
-                    <td style="height: 150px" class="align-middle text-wrap" th:text="${item.getItem().getName()}"></td>
-                    <td style="height: 150px" class="align-middle text-wrap">
-                        <button th:onclick="'increaseCountOfItemOnBasketPage(' + ${item.getItem().getId()} + ')'"
-                                type='button' class='default' style="height: 25px; width: 25px">+
-                        </button>
-                        <span th:id="'itemCountOnBasketPage' + ${item.getItem().getId()}">
-                        <span th:text="'&nbsp;&nbsp;&nbsp;' + ${item.getCountInBasket()} + '&nbsp;&nbsp;&nbsp;'"
-                              th:id="'itemCountFieldOnBasketPage' + ${item.getItem().getId()}"></span>
-                        </span>
-                        <button th:onclick="'decreaseCountOfItemOnBasketPage(' + ${item.getItem().getId()} + ')'"
-                                type='button' class='default' style="height: 25px; width: 25px">-
-                        </button>
-                    </td>
-                    <td style="width: 150px; height: 150px" class="align-middle text-wrap">
-                        <span th:id="'itemPriceOnBasketPage' + ${item.getItem().getId()}">
-                            <span th:text="${item.getItem().getPrice()}"
-                                  th:id="'itemPriceFieldOnBasketPage' + ${item.getItem().getId()}"></span>
-                        </span>
-                    </td>
-                </tr>
-                <form th:method="POST" th:action="@{/order}" th:object="${orderDto}">
-                    <tr>
-                        <td colspan="5" class="table-secondary">
-                            <p class="text-end fw-bold text-nowrap"><span id="orderPriceTotal">Итог:&nbsp;</span></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="5">
-                            <p class="text-end fw-bold text-nowrap">
-                                <button type="submit" class="default">Оформить заказ</button>
-                            </p>
-                        </td>
-                    </tr>
-                </form>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-2">Однажды здесь будет форма купона</div>
-        <div class="col-1"></div>
-    </div>
-</div>
-<div th:if="${#authorization.expression('isAuthenticated()')}">
-    <script>
-        jQuery(document).ready(function ($) {
-            onLoadBasketFillOnBasketPage();
-        })
-    </script>
-</div>
 </body>
 </html>
