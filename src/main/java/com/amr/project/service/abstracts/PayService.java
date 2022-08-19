@@ -7,5 +7,7 @@ public interface PayService <T> extends ReadWriteService<Bill,Long>{
 
     // определяем общий метод соединения с любым АПИ для оплаты
     T connectWithMerchant(OrderDto orderDto);
-    String getUrlFromResponse(OrderDto orderDto);
+    Bill createBill(T response);
+    void saveBill(Bill bill);
+
 }

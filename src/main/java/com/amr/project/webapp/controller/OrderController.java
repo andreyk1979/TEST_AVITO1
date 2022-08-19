@@ -1,20 +1,35 @@
 package com.amr.project.webapp.controller;
 
+import com.amr.project.converter.BasketMapper;
+import com.amr.project.converter.OrderMapper;
+import com.amr.project.model.dto.BasketDto;
+import com.amr.project.model.dto.ItemCountPositionDto;
+import com.amr.project.model.dto.ItemDto;
+import com.amr.project.model.dto.OrderDto;
+import com.amr.project.model.entity.Order;
 import com.amr.project.model.entity.User;
 import com.amr.project.model.enums.Status;
-import com.amr.project.service.abstracts.MailService;
+import com.amr.project.service.abstracts.BasketService;
+import com.amr.project.service.abstracts.PayService;
 import com.amr.project.service.impl.OrderServiceImpl;
 import com.amr.project.service.impl.UserServiceImp;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import com.qiwi.billpayments.sdk.model.out.BillResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Logger;
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
@@ -22,103 +37,50 @@ public class OrderController {
     private final OrderMapper orderMapper;
     private final UserServiceImp userServiceImp;
     private final OrderServiceImpl orderService;
-    private final MailService mailService;
+    private final PayService<BillResponse> payService;
+    private final BasketMapper basketMapper;
+    private final BasketService basketService;
 
+
+    @Autowired
     public OrderController(OrderMapper orderMapper,
-                           UserServiceImp userServiceImp,
-                           OrderServiceImpl orderService,
-                           MailService mailService) {
+                               UserServiceImp userServiceImp,
+                               OrderServiceImpl orderService,
+                               PayService<BillResponse> payService, BasketMapper basketMapper, BasketService basketService) {
 
         this.orderMapper = orderMapper;
         this.userServiceImp = userServiceImp;
         this.orderService = orderService;
-        this.mailService = mailService;
+        this.payService = payService;
+        this.basketMapper = basketMapper;
+        this.basketService = basketService;
     }
 
-    @PutMapping
-    public void createOrder(@Valid @RequestBody OrderDto orderDto) {
+    @PostMapping
+    public String createOrder(@Valid /*@RequestBody*/@ModelAttribute("orderDto") OrderDto orderDto, @AuthenticationPrincipal User user, Model model) {
+        orderDto.setDate(LocalDateTime.ofInstant(Calendar.getInstance().toInstant(), Calendar.getInstance().getTimeZone().toZoneId())); // костыль для deliveryDate
+        BasketDto basketDto = basketMapper.toDto(basketService.findById(user.getId()));
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        for (ItemCountPositionDto item : basketDto.getItemCountPositions()) {
+            itemDtoList.add(item.getItem());
+        }
+        orderDto.setItemsInOrder(itemDtoList);
+
         Order order = orderMapper.toModel(orderDto);
-        User user = userServiceImp.findById(orderDto.getUserId());
+        order.setAddress(user.getAddress());
         order.setUser(user);
         order.setStatus(Status.START);
+        order.setOrderDate(Calendar.getInstance());
+        order.setCurrency("RUB");
+        order.setGrandTotal(orderDto.getTotal());
+
+        // TODO добавить логику ожидаемой даты заказа
         Calendar deliveryDate = Calendar.getInstance();
         deliveryDate.setTime(Date.from(orderDto.getDate().atZone(ZoneId.systemDefault()).toInstant()));
         order.setExpectedDeliveryDate(deliveryDate);
         orderService.update(order);
-    }
 
-    @PostMapping("/paying")
-    public void waitPay(@Valid @RequestBody OrderDto orderDto) {
-        Order order = orderService.findById(orderDto.getId());
-        if (order.getStatus() == Status.START) {
-            order.setStatus(Status.WAITING);
-            orderService.update(order);
-        }
-    }
-
-    //TODO сделать метод, который проверяет оплату и меняет статус. Зависит от метода оплаты
-    @PostMapping("/pay")
-    public void getPay() {
-    }
-
-    @PostMapping("/sent")
-    public void sentOrder(@Valid @RequestBody OrderDto orderDto) {
-        Order order = orderService.findById(orderDto.getId());
-        if (order.getStatus() == Status.PAID) {
-            order.setStatus(Status.SENT);
-            orderService.update(order);
-        }
-    }
-
-    @PostMapping("/deliver")
-    public void deliverOrder(@Valid @RequestBody OrderDto orderDto) {
-        Order order = orderService.findById(orderDto.getId());
-        if (order.getStatus() == Status.SENT) {
-            order.setStatus(Status.DELIVERED);
-            orderService.update(order);
-        }
-
-    }
-
-    @Scheduled(cron = "0 0 * * * *")
-    public void checkStatusOrder() {
-        Calendar calendar = Calendar.getInstance();
-        orderService.findAll().forEach(order -> {
-            if (order.getExpectedDeliveryDate().getTime().before(calendar.getTime())) {
-                order.setStatus(Status.DELIVERED);
-                orderService.update(order);
-            }
-        });
-
-    @PostMapping
-    public String createOrder(@AuthenticationPrincipal User user, Model model) {
-        // Заглушка
         model.addAttribute("activeUser", user);
         return "/orderPage";
-    }
-
-    @Scheduled(cron = "@hourly")
-    void deleteNotActualOrders() {
-        org.slf4j.Logger logger = LoggerFactory.getLogger(OrderController.class);
-        orderService.findAllNotActual().forEach(order -> {
-            String name;
-            String email;
-            try {
-                name = order.getUser().getUsername();
-                email = order.getUser().getEmail();
-            } catch (NullPointerException ex) {
-                logger.warn("Deleted Order with id: {}, had User == null", order.getId());
-                orderService.delete(order);
-                return;
-            }
-            String message = String.format("Уважамый ,%s! \n" +
-                            "Ваш заказ № %s на сайте Avito, был удален в связи \n" +
-                            "с отсутствием оплаты в течение %s часов \n" +
-                            "держитесь там и хорошего вам настроения!",
-                    name, order.getId(), Order.EXPIRATION_HOURS);
-            mailService.send(email, "Order delete in Avito 2.0", message);
-            logger.info("Order id: {}, was deleted by schedule - not paid", order.getId());
-            orderService.delete(order);
-        });
     }
 }

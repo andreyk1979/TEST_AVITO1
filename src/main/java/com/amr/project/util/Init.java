@@ -11,7 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,6 +48,8 @@ public class Init {
         createCouponAndDiscount(entityManager);
         createSalesHistory(entityManager);
         createChat(entityManager);
+        createBill(entityManager);
+
         createBasket(entityManager);
         entityManager.close();
     }
@@ -652,7 +658,8 @@ public class Init {
         entityManager.getTransaction().begin();
 
         Coupon coupon = new Coupon();
-        coupon.setUser(entityManager.find(User.class, 2L));
+        coupon.setUser(entityManager.find(User.class, 1L));
+        coupon.setEnd(Calendar.getInstance());
         coupon.setStart(Calendar.getInstance());
 
         Calendar endDate = Calendar.getInstance();
@@ -686,6 +693,21 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
+    private void createBill (EntityManager entityManager) {
+        entityManager.getTransaction().begin();
+
+        Bill bill = Bill.builder()
+                .billId("1")
+                    .amountValue(BigDecimal.ONE)
+                .customerEmail("zer@mail.ru")
+                .customerPhone("88002223333")
+                .expirationDateTime(ZonedDateTime.parse("2000-11-11T10:11:05+03:00"))
+                .comment("comment")
+                .build();
+        entityManager.persist(bill);
+        entityManager.getTransaction().commit();
+    }
+
     private void createBasket(EntityManager entityManager) {
         entityManager.getTransaction().begin();
 
@@ -716,4 +738,5 @@ public class Init {
 
         entityManager.getTransaction().commit();
     }
+
 }

@@ -54,7 +54,7 @@ public class UserDtoController {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Метод allUsers", notes = "Метод allUsers возвращает List UserDto - " +
+    @ApiOperation(value = "Метод allShops", notes = "Метод allShops возвращает List UserDto - " +
             "список всех пользователей из БД" )
     public List<UserDto> allUsers() {
         return userMapper.toDtos(userService.findAll());
