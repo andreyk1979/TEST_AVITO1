@@ -39,7 +39,7 @@ public class UserDaoImp extends ReadWriteDaoImpl<User,Long> implements UserDao {
             return false;
         }
         user.setRole(Roles.USER);
-        user.setBasket(new Basket(user)); // todo-makeev SET BASKET HERE
+        user.setBasket(new Basket(user));
         em.persist(user);
         return true;
     }

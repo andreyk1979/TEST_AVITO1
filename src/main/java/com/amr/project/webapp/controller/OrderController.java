@@ -80,6 +80,17 @@ public class OrderController {
         order.setExpectedDeliveryDate(deliveryDate);
         orderService.update(order);
 
+        // makeev
+        // create order using createOrderFromBasket
+        // you don't need orderDto in your @ModelAttribute
+
+        // replace rows 81-81 by next rows (deliveryDate also will be set there)
+
+        // OrderDto orderDto = new OrderDto();
+        // orderService.setPositionCountFromBasket(orderDto, user.getId());
+        // orderService.lockItemsRests(orderDto);
+        // Order order = orderService.createOrderFromBasket(orderDto, user);
+
         model.addAttribute("activeUser", user);
         return "/orderPage";
     }

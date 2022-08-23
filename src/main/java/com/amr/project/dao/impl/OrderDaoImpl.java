@@ -1,7 +1,6 @@
 package com.amr.project.dao.impl;
 
 import com.amr.project.dao.abstracts.OrderDao;
-import com.amr.project.model.entity.Chat;
 import com.amr.project.model.entity.Order;
 import com.amr.project.model.enums.Status;
 import org.springframework.stereotype.Repository;

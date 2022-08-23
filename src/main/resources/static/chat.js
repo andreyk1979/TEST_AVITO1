@@ -9,6 +9,7 @@ let chatId = 0
 let notification = []
 
 $(document).ready(function connect() {
+    console.log("Here - document ready")
     let socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket)
     stompClient.connect({}, function (frame) {
