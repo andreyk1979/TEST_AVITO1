@@ -46,8 +46,9 @@ public class ChatController {
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     public NotificationDto messageProcessing(MessageDto messageDto) {
+        System.out.println("----------------------IN CHAT--------------------");
         if (!userService.existByUserName(messageDto.getToUserName())
-                ||messageDto.getToUserName().equals(messageDto.getFromUserName())) {
+                || messageDto.getToUserName().equals(messageDto.getFromUserName())) {
 
             return new NotificationDto(messageDto.getFromUserName());
         }

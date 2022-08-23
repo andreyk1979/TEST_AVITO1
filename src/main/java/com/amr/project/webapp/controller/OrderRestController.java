@@ -1,54 +1,71 @@
 package com.amr.project.webapp.controller;
 
-import com.amr.project.converter.BasketMapper;
 import com.amr.project.converter.OrderMapper;
-import com.amr.project.model.dto.BasketDto;
-import com.amr.project.model.dto.ItemCountPositionDto;
-import com.amr.project.model.dto.ItemDto;
 import com.amr.project.model.dto.OrderDto;
 import com.amr.project.model.entity.Order;
 import com.amr.project.model.entity.User;
 import com.amr.project.model.enums.Status;
-import com.amr.project.service.abstracts.BasketService;
-import com.amr.project.service.abstracts.PayService;
+import com.amr.project.service.abstracts.MailService;
 import com.amr.project.service.impl.OrderServiceImpl;
-import com.amr.project.service.impl.UserServiceImp;
-import com.qiwi.billpayments.sdk.model.out.BillResponse;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import com.amr.project.service.abstracts.PayService;
+import com.qiwi.billpayments.sdk.model.out.BillResponse;
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/order")
 public class OrderRestController {
     private final OrderMapper orderMapper;
-    private final UserServiceImp userServiceImp;
     private final OrderServiceImpl orderService;
+    private final MailService mailService;
     private final PayService<BillResponse> payService;
-    private final BasketMapper basketMapper;
-    private final BasketService basketService;
-
 
     @Autowired
     public OrderRestController(OrderMapper orderMapper,
-                               UserServiceImp userServiceImp,
                                OrderServiceImpl orderService,
-                               PayService<BillResponse> payService, BasketMapper basketMapper, BasketService basketService) {
-
+                               MailService mailService,
+                               PayService<BillResponse> payService) {
         this.orderMapper = orderMapper;
-        this.userServiceImp = userServiceImp;
         this.orderService = orderService;
+        this.mailService = mailService;
         this.payService = payService;
-        this.basketMapper = basketMapper;
-        this.basketService = basketService;
+    }
+    @ApiOperation(value = "Метод createOrderFromBasket",
+            notes = "строит заказ по имеющейся корзине")
+    @PutMapping
+    public OrderDto createOrderFromBasket(@AuthenticationPrincipal User user) {
+        OrderDto orderDto = new OrderDto();
+        orderService.setPositionCountFromBasket(orderDto, user.getId());
+        orderService.lockItemsRests(orderDto);
+        Order order = orderService.createOrderFromBasket(orderDto, user);
+        return orderMapper.toDto(order);
     }
 
+    @ApiOperation(value = "Метод addDescription",
+            notes = "добавляет комментарий от юзера к заказу")
+    @PutMapping("/description/{orderId}")
+    public void addDescription(@PathVariable Long orderId, @RequestBody String description) {
+        Order order = orderService.findById(orderId);
+        order.setDescription(description);
+        orderService.update(order);
+    }
+
+    @ApiOperation(value = "Метод useCoupon",
+            notes = "применяет купон к заказу, меняет и возвращает итоговую цену заказа и гасит купон")
+    @PutMapping("/coupon/{couponId}/{orderId}")
+    public BigDecimal useCoupon(@PathVariable Long couponId, @PathVariable Long orderId) {
+        return orderService.useCoupon(orderId, couponId);
+
+    }
 
     @GetMapping("/get/{id}")
     public Order getOneOrder (@PathVariable Long id) {
@@ -89,6 +106,14 @@ public class OrderRestController {
 
     }
 
+    @ApiOperation(value = "Метод getOrderById",
+            notes = "возвращает OrderDto по id")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderDto getOrderById(@PathVariable Long id) {
+        return orderMapper.toDto(orderService.findById(id));
+    }
+
     @Scheduled(cron = "0 0 * * * *")
     public void checkStatusOrder() {
         Calendar calendar = Calendar.getInstance();
@@ -99,5 +124,32 @@ public class OrderRestController {
             }
         });
 
+    }
+
+    @Scheduled(cron = "@hourly")
+    void deleteNotActualOrders() {
+        org.slf4j.Logger logger = LoggerFactory.getLogger(OrderRestController.class);
+        orderService.findAllNotActual().forEach(order -> {
+            String name;
+            String email;
+            try {
+                name = order.getUser().getUsername();
+                email = order.getUser().getEmail();
+            } catch (NullPointerException ex) {
+                logger.warn("Deleted Order with id: {}, had User == null", order.getId());
+                orderService.unlockItemsRests(orderMapper.toDto(order));
+                orderService.delete(order);
+                return;
+            }
+            String message = String.format("Уважамый ,%s! \n" +
+                            "Ваш заказ № %s на сайте Avito, был удален в связи \n" +
+                            "с отсутствием оплаты в течение %s часов \n" +
+                            "держитесь там и хорошего вам настроения!",
+                    name, order.getId(), Order.EXPIRATION_HOURS);
+            mailService.send(email, "Order delete in Avito 2.0", message);
+            logger.info("Order id: {}, was deleted by schedule - not paid", order.getId());
+            orderService.unlockItemsRests(orderMapper.toDto(order));
+            orderService.delete(order);
+        });
     }
 }

@@ -4,7 +4,6 @@ import com.amr.project.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
@@ -15,6 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -72,6 +72,16 @@ public class Order {
     public Order() {
         qiwiId = UUID.randomUUID().toString();
     }
+
+    // колличество по позиции в заказе (ItemId:Count)
+    //@EnoughToLock
+    @ToString.Exclude
+    @ElementCollection
+    @CollectionTable(name="order_position_count",
+        joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "item_id")
+    @Column(name = "count")
+    private Map<Long, Integer> positionCount = new HashMap<>();
 
     @Override
     public boolean equals(Object o) {

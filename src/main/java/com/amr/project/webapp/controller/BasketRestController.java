@@ -88,7 +88,7 @@ public class BasketRestController {
     }
 
     @ApiOperation(value= "Метод getBasket", notes= "Метод возвращает упрощенный Map корзины (id: count) ")
-    @GetMapping("/items")
+    @GetMapping("/items/")
     public Map<Long, Integer> getBasket(@AuthenticationPrincipal User user) {
 
         BasketDto basketDto = basketMapper.toDto(basketService.findById(user.getId()));

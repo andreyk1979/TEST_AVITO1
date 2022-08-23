@@ -3,10 +3,7 @@ package com.amr.project.util;
 import com.amr.project.model.entity.*;
 import com.amr.project.model.entity.report.SalesHistory;
 import com.amr.project.model.enums.*;
-import com.amr.project.service.abstracts.BasketService;
-import com.amr.project.service.impl.BasketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -643,6 +640,10 @@ public class Init {
         order.setItemsInOrder(items);
         order.setCurrency("RUB");
         order.setDescription("Fragile!");
+
+        order.getPositionCount().put(4L, 2);
+        order.getPositionCount().put(7L, 3);
+
         entityManager.persist(order);
 
         User user = entityManager.find(User.class, 1L);
