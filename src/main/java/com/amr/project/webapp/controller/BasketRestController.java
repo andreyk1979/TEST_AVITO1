@@ -88,7 +88,7 @@ public class BasketRestController {
     }
 
     @ApiOperation(value= "Метод getBasket", notes= "Метод возвращает упрощенный Map корзины (id: count) ")
-    @GetMapping("/items/")
+    @GetMapping("/items")
     public Map<Long, Integer> getBasket(@AuthenticationPrincipal User user) {
 
         BasketDto basketDto = basketMapper.toDto(basketService.findById(user.getId()));
@@ -102,7 +102,7 @@ public class BasketRestController {
     @ApiOperation(value= "Метод updateItem", notes= "Метод принимает JSON List<ItemCountPositionDto> " +
             "(из Item нужен только id) валидирует поля countInBasket,заменяет позиции в корзине или " +
             "возвращает ошибку валидации")
-    @PutMapping("/items/")
+    @PutMapping("/items")
     @Validated({OnAdd.class, OnDec.class})
     public ResponseEntity<HttpStatus> updateItems(@AuthenticationPrincipal User user,
                                         @Valid @RequestBody List<ItemCountPositionDto> itemCountPositionDtos) {
