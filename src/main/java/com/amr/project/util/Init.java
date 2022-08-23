@@ -45,7 +45,7 @@ public class Init {
         createCouponAndDiscount(entityManager);
         createSalesHistory(entityManager);
         createChat(entityManager);
-        createBill(entityManager);
+//        createBill(entityManager);
 
         createBasket(entityManager);
         entityManager.close();
@@ -694,20 +694,20 @@ public class Init {
         entityManager.getTransaction().commit();
     }
 
-    private void createBill (EntityManager entityManager) {
-        entityManager.getTransaction().begin();
-
-        Bill bill = Bill.builder()
-                .billId("1")
-                    .amountValue(BigDecimal.ONE)
-                .customerEmail("zer@mail.ru")
-                .customerPhone("88002223333")
-                .expirationDateTime(ZonedDateTime.parse("2000-11-11T10:11:05+03:00"))
-                .comment("comment")
-                .build();
-        entityManager.persist(bill);
-        entityManager.getTransaction().commit();
-    }
+//    private void createBill (EntityManager entityManager) {
+//        entityManager.getTransaction().begin();
+//
+//        Bill bill = Bill.builder()
+//                .billId("1")
+//                    .amountValue(BigDecimal.ONE)
+//                .customerEmail("zer@mail.ru")
+//                .customerPhone("88002223333")
+//                .expirationDateTime(ZonedDateTime.parse("2000-11-11T10:11:05+03:00"))
+//                .comment("comment")
+//                .build();
+//        entityManager.persist(bill);
+//        entityManager.getTransaction().commit();
+//    }
 
     private void createBasket(EntityManager entityManager) {
         entityManager.getTransaction().begin();

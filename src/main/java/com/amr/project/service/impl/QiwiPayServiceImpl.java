@@ -16,14 +16,13 @@ import com.qiwi.billpayments.sdk.model.out.BillResponse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URISyntaxException;
+
 import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.UUID;
 @Service
-public class QiwiPayServiceImpl extends ReadWriteServiceImpl<Bill,Long> implements PayService<BillResponse> {
+public class QiwiPayServiceImpl extends ReadWriteServiceImpl<Bill,Long> implements PayService<BillResponse, BillPaymentClient> {
 
     private final static String SECRET_KEY =
             "eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6ImE5YW94cC0wMCIsInVzZXJfaWQiOiI3OTA5O" +
@@ -36,6 +35,7 @@ public class QiwiPayServiceImpl extends ReadWriteServiceImpl<Bill,Long> implemen
         super(dao);
         this.orderService = orderService;
     }
+    @Override
     public BillPaymentClient getClient (){
         return BillPaymentClientFactory.createDefault(SECRET_KEY);
     }
@@ -57,7 +57,7 @@ public class QiwiPayServiceImpl extends ReadWriteServiceImpl<Bill,Long> implemen
                         Currency.getInstance(order.getCurrency())
                 ),
                 "comment",
-                ZonedDateTime.now().plusDays(45),
+                ZonedDateTime.now().plusMinutes(1),
                 new Customer(
                         customer.getEmail(),
                         UUID.randomUUID().toString(),
@@ -79,9 +79,8 @@ public class QiwiPayServiceImpl extends ReadWriteServiceImpl<Bill,Long> implemen
                 .comment(response.getComment())
                 .build();
     }
-    @Transactional
-    public void saveBill(Bill bill) {
-        dao.persist(bill);
+    @Override
+    public String getBillStatus(String billId) {
+        return getClient().getBillInfo(billId).getStatus().getValue().getValue();
     }
-
 }

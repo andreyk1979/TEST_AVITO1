@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="520615765928-5gbho3qf7bd565eeskrh1lnml1cvpb02.apps.googleusercontent.com">
     <title>Order</title>
-
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -124,5 +128,64 @@
 </nav>
 <br>
 <br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <ul class="nav flex-column nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-7">
+            <form th:method="POST" th:action="@{/pay/order?orderId={id}(id=${newOrder.getId()})}">
+                <table class="table text-center align-middle">
+                    <tbody>
+                    <tr th:each="item : ${newOrder.getItemsInOrder()}">
+                        <td style="height: 150px" class="align-middle text-wrap"><img
+                                style="max-width: 150px; max-height: 150px"
+                                th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
+                        </td>
+                        <td style="height: 150px" class="align-middle text-wrap"
+                            th:text="${item.getName()}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="table-secondary">
+                            <p class="text-end fw-bold text-nowrap"><span>Итог:&nbsp;</span><span th:text="${newOrder.getTotal()}"></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-middle text-wrap" colspan="2">
+                            <p class="text-start">
+                                <span class="fw-bold">Адрес доставки:&nbsp;</span> <span class="text-start" th:text="${activeUser.getAddress()}"></span>
+                            </p>
+                            <p class="text-start">
+                                <span class="fw-bold">Дата доставки:&nbsp;</span> <span class="text-start" th:text="${newOrder.getDate()}"></span>
+                            </p>
+                            <p class="text-start">
+                                <span class="fw-bold">Email:&nbsp;</span> <span class="text-start" th:text="${activeUser.getEmail()}"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="text-end fw-bold text-nowrap">
+                    <button type="submit" class="default">Оплатить заказ</button>
+                </p>
+            </form>
+        </div>
+        <div class="col-2">Однажды здесь будет форма купона</div>
+        <div class="col-1"></div>
+    </div>
+</div>
 </body>
 </html>

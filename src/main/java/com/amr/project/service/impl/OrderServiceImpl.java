@@ -2,25 +2,18 @@ package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.OrderDao;
 import com.amr.project.dao.abstracts.ReadWriteDao;
-import com.amr.project.exception.CountMoreThenRestException;
 import com.amr.project.model.dto.OrderDto;
 import com.amr.project.model.entity.*;
 import com.amr.project.model.enums.Status;
 import com.amr.project.service.abstracts.*;
 import com.amr.project.util.validation.basket.OnAdd;
-import com.amr.project.util.validation.order.EnoughToLock;
-import com.amr.project.util.validation.order.OrderCountsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -90,7 +83,7 @@ public class OrderServiceImpl extends ReadWriteServiceImpl<Order, Long> implemen
                         BigDecimal priceWithDiscount = item.getPrice()
                                 .subtract(item.getPrice()
                                         .multiply(BigDecimal.valueOf(item.getDiscount() / 100.0)));
-                        BigDecimal sumPrice = priceWithDiscount.multiply(BigDecimal.valueOf(item.getCount()));
+                        BigDecimal sumPrice = priceWithDiscount.multiply(BigDecimal.valueOf(entity.getValue()));
                         return acc.add(sumPrice);
                     }, BigDecimal::add);
 
@@ -105,7 +98,7 @@ public class OrderServiceImpl extends ReadWriteServiceImpl<Order, Long> implemen
                     .positionCount(orderDto.getPositionCount())
                     .address(user.getAddress())
                     .build();
-
+            order.setQiwiId(UUID.randomUUID().toString());
             super.persist(order);
 
             //basketService.clear(user.getId()); // todo - makeev clean basket here if it's need

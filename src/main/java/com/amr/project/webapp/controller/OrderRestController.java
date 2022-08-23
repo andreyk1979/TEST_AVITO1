@@ -7,6 +7,7 @@ import com.amr.project.model.entity.User;
 import com.amr.project.model.enums.Status;
 import com.amr.project.service.abstracts.MailService;
 import com.amr.project.service.impl.OrderServiceImpl;
+import com.qiwi.billpayments.sdk.client.BillPaymentClient;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class OrderRestController {
     private final OrderMapper orderMapper;
     private final OrderServiceImpl orderService;
     private final MailService mailService;
-    private final PayService<BillResponse> payService;
+    private final PayService<BillResponse, BillPaymentClient> payService;
 
     @Autowired
     public OrderRestController(OrderMapper orderMapper,
                                OrderServiceImpl orderService,
                                MailService mailService,
-                               PayService<BillResponse> payService) {
+                               PayService<BillResponse, BillPaymentClient> payService) {
         this.orderMapper = orderMapper;
         this.orderService = orderService;
         this.mailService = mailService;

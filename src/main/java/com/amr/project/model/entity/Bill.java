@@ -16,21 +16,24 @@ import java.time.ZonedDateTime;
 @Builder
 public class Bill {
     @Id
-    @Column(name = "billId", nullable = false, unique = true, length = 250)
+    @Column(name = "bill_Id", nullable = false, unique = true, length = 250)
     private String billId;
 
-    @Column(name = "amountValue")
+    @Column(name = "amount_value")
     private BigDecimal amountValue;
 
-    @Column(name = "customerEmail")
+    @Column(name = "customer_email")
     private String customerEmail;
 
-    @Column(name = "customerPhone")
+    @Column(name = "customer_phone")
     private String customerPhone;
 
-    @Column(name = "expirationDateTime")
+    @Column(name = "expiration_date_time")
     private ZonedDateTime expirationDateTime;
 
     @Column(name = "comment")
     private String comment;
+
+    @Column(name = "status")
+    private String status;
 }

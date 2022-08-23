@@ -3,116 +3,70 @@ package com.amr.project.webapp.controller;
 import com.amr.project.converter.OrderMapper;
 import com.amr.project.model.dto.OrderDto;
 import com.amr.project.model.entity.Bill;
-import com.amr.project.model.entity.Order;
-import com.amr.project.model.entity.User;
-import com.amr.project.model.enums.Status;
+import com.amr.project.service.abstracts.BillService;
 import com.amr.project.service.abstracts.PayService;
 import com.amr.project.service.impl.OrderServiceImpl;
-import com.amr.project.service.impl.UserServiceImp;
+import com.qiwi.billpayments.sdk.client.BillPaymentClient;
 import com.qiwi.billpayments.sdk.model.out.BillResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/pay/order")
 public class PayController {
     private final OrderMapper orderMapper;
-    private final UserServiceImp userServiceImp;
+    private final BillService billService;
     private final OrderServiceImpl orderService;
-    private final PayService<BillResponse> payService;
-
+    private final PayService<BillResponse, BillPaymentClient> payService;
     @Autowired
-    public PayController(OrderMapper orderMapper,
-                         UserServiceImp userServiceImp,
+    public PayController(OrderMapper orderMapper, BillService billService,
                          OrderServiceImpl orderService,
-                         PayService<BillResponse> payService) {
-
+                         PayService<BillResponse, BillPaymentClient> payService) {
         this.orderMapper = orderMapper;
-        this.userServiceImp = userServiceImp;
+        this.billService = billService;
         this.orderService = orderService;
         this.payService = payService;
     }
 
-//    @PostMapping
-//    public String doPay (@RequestBody OrderDto orderDto) {
-//        return "redirect:" + payService.connectWithMerchant(orderDto).getPayUrl();
-//    }
-
-    @GetMapping()
-    public String doPayTest () {
-        OrderDto orderDto = orderMapper.toDto(orderService.findById(1L));
+    @PostMapping()
+    public String doPay (@RequestParam Long orderId) {
+        OrderDto orderDto = orderMapper.toDto(orderService.findById(orderId));
         BillResponse response = payService.connectWithMerchant(orderDto);
         Bill bill = payService.createBill(response);
-        payService.saveBill(bill);
+        bill.setStatus("WAITING");
+        billService.saveBill(bill);
         String successURL = response.getPayUrl();
         return "redirect:" + successURL;
     }
 
+    @ResponseBody
+    @GetMapping("/cancel}")
+    public String doCancelBill(@RequestParam String userEmail) {
+        Bill bill = billService.findByEmail(userEmail);
+        BillPaymentClient client = payService.getClient();
+        BillResponse response = client.cancelBill(bill.getBillId());
+        billService.delete(bill);
+        return response.getStatus().getValue().getValue();
+    }
+    @ResponseBody
+    @GetMapping("/status")
+    public String getBillStatus(@RequestParam String userEmail) {
+        Bill bill = billService.findByEmail(userEmail);
+        String billStatus = payService.getBillStatus(bill.getBillId());
+        bill.setStatus(billStatus);
+        billService.update(bill);
+        return billStatus;
+    }
 
-
-
-
-
-
-
-
-
-
-
-// !!!!!!! Методы для проверки состояния счета.
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! МЕТОДЫ НЕДОДЕЛАНЫ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-//    @PostMapping("/paying")
-//    public void waitPay(@Valid @RequestBody OrderDto orderDto) {
-//        Order order = orderService.findById(orderDto.getId());
-//        if (order.getStatus() == Status.START) {
-//            order.setStatus(Status.WAITING);
-//            orderService.update(order);
-//        }
-//    }
-//
-//    @PostMapping("/pay")
-//    public void getPay() {
-//
-//    }
-//
-//    @PostMapping("/sent")
-//    public void sentOrder(@Valid @RequestBody OrderDto orderDto) {
-//        Order order = orderService.findById(orderDto.getId());
-//        if (order.getStatus() == Status.PAID) {
-//            order.setStatus(Status.SENT);
-//            orderService.update(order);
-//        }
-//    }
-//
-//    @PostMapping("/deliver")
-//    public void deliverOrder(@Valid @RequestBody OrderDto orderDto) {
-//        Order order = orderService.findById(orderDto.getId());
-//        if (order.getStatus() == Status.SENT) {
-//            order.setStatus(Status.DELIVERED);
-//            orderService.update(order);
-//        }
-//
-//    }
-//
-//    @Scheduled(cron = "0 0 * * * *")
-//    public void checkStatusOrder() {
-//        Calendar calendar = Calendar.getInstance();
-//        orderService.findAll().forEach(order -> {
-//            if (order.getExpectedDeliveryDate().getTime().before(calendar.getTime())) {
-//                order.setStatus(Status.DELIVERED);
-//                orderService.update(order);
-//            }
-//        });
-//    }
-
+    @Scheduled(cron = "0 * * * * *")
+    public void checkBillStatus() {
+        billService.findAll().forEach(bill -> {
+            String billStatus = payService.getBillStatus(bill.getBillId());
+            bill.setStatus(billStatus);
+            billService.update(bill);
+        });
+    }
 }
