@@ -14,4 +14,6 @@ public interface ShopDao extends ReadWriteDao<Shop, Long>{
     List<Shop> getShopsToBeModerated();
 
     Long getCountShop(String name);
+
+    List<Shop> getAllShops();
 }

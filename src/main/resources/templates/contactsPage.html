@@ -101,7 +101,7 @@
                     <a class="cd-signin">Вход</a></li>
                 <li class="nav-item text-nowrap text-center">
                     <a
-                       class="cd-signup">Регистрация</a></li>
+                            class="cd-signup">Регистрация</a></li>
             </ul>
             <!--            Кнопка выхода и приветствие-ссылка на страницу юзера. Видны только авторизованному пользователю-->
             <ul class="px-4">
@@ -110,35 +110,35 @@
                     <span>Привет,&nbsp;
                     <a style="color: white; text-decoration: underline"
                        th:href="@{/user/{id}(id=${activeUser.getId()})}"><span class="text-capitalize"
-                            th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
+                                                                               th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
                     </span>
 
-<!--                    Корзина-->
+                    <!--                    Корзина-->
                     <button
                             class="default text-white text-center" onload="" type="button" id="bucketButton" data-bs-toggle="modal" data-bs-target="#bucketModal"
                             style="height: 32px; width: 80px">Корзина
                     </button>
                     <div class="modal fade" id="bucketModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #009898;">
-                                <h5 class="modal-title" id="exampleModalLabel">Корзина</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <table class="table text-center align-middle">
-                                    <tbody id="basketBody">
+                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #009898;">
+                                    <h5 class="modal-title" id="exampleModalLabel">Корзина</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table text-center align-middle">
+                                        <tbody id="basketBody">
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" data-bs-dismiss="modal" class="btn btn-danger col-3" onclick="clearTheBasket()">Очистить корзину</button>
-                                <button type="button" class="default col-5" onclick="location.href='basket'">Перейти в корзину</button>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" data-bs-dismiss="modal" class="btn btn-danger col-3" onclick="clearTheBasket()">Очистить корзину</button>
+                                    <button type="button" class="default col-5" onclick="location.href='basket'">Перейти в корзину</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                     <button
                             class="default text-white text-center" onclick="location.href='/logout'" type="button"
                             style="height: 32px; width: 80px">Выйти
@@ -150,83 +150,8 @@
 </nav>
 
 <div class="grid" id="main">
-    <div class="row">
-        <div class="col-2">
-            <div class="btn-group-vertical">
-                <button th:if="${#authorization.expression('hasAnyAuthority(''MODERATOR'')')}" type="button"
-                        class="default text-white text-center" onclick="location.href='/moderation'">Модерация
-                </button>
-                <button th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" type="button"
-                        class="default text-white text-center" onclick="location.href='/#'">Администрация
-                </button>
-            </div>
-            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                <ul th:each="category : ${mainPageDto.getCategoryDto()}">
-                    <button type="button" class="default" href="#">
-                        <li th:text="${category.getName()}"></li>
-                    </button>
-                </ul>
-            </div>
-        </div>
 
-        <div class="col-8">
-
-            <!-- Товары -->
-            <p class="h3">Подборка популярных товаров</p>
-            <div class="grid">
-                <div class="row">
-                    <div class="row row-cols-1 row-cols-sm-2 g-3">
-                        <ul th:each="item : ${mainPageDto.getItemDtoList()}">
-                            <div class="card">
-                                <div class="card-header">
-                                    <li th:text="${item.getName}"></li>
-                                </div>
-                                <div class="card-body">
-
-                                    <td>
-                                        <img class="cd-card-img" th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
-                                    </td>
-
-                                    <p class="card-text">
-                                    <li th:text="${item.getPrice}"></li>
-                                    </p>
-                                    <p class="card-text">
-                                    <li th:text="${item.getDescription}"></li>
-                                    </p>
-                                    <button type="button" class="default" th:onclick="'javascript:addItemToCart(' + ${item.getId()} + ')'">В корзину</button>
-                                </div>
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <!--Список магазинов-->
-    <p class="h3">Популярные магазины</p>
-    <div class="grid">
-        <div class="row">
-            <div class="card-group">
-                <ul th:each="shop : ${mainPageDto.getShopDtoList()}">
-                    <div class="card">
-                        <div class="card-header">
-                            <li th:text="${shop.getName}"></li>
-                        </div>
-                        <div class="card-body">
-                            <img class="cd-card-img" th:src="@{'data:image/jpeg;base64,'+${shop.getLogo().getPictureBase64()}}">
-                            <p class="card-text">
-                            <li th:text="${shop.getDescription}"></li>
-                            </p>
-                            <a class="text-white" th:href="@{/shop/{id}(id=${shop.getId()})}"><button type="button" class="default">Перейти</button></a>
-                        </div>
-                    </div>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <p class="h3">Контакты</p>
 
     <!-- Окно авторизации -->
     <div class="cd-user-modal"> <!-- все формы на фоне затемнения-->

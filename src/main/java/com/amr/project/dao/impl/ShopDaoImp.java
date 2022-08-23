@@ -45,6 +45,11 @@ public class ShopDaoImp extends ReadWriteDaoImpl<Shop, Long> implements ShopDao 
 
         return (Long) list.get(0);
     }
+
+    @Override
+    public List<Shop> getAllShops() {
+        return em.createQuery("select s from Shop s order by s.rating DESC").getResultList();
+    }
 }
 
 
