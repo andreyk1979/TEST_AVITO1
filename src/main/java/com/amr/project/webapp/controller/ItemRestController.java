@@ -1,38 +1,40 @@
 package com.amr.project.webapp.controller;
 
-import com.amr.project.converter.ItemMapper;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import com.amr.project.facade.ItemRestFacade;
 import com.amr.project.model.dto.ItemDto;
-import com.amr.project.model.entity.Item;
-import com.amr.project.service.abstracts.ItemService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Api(description = "REST контроллер для работы с товаром(Item)")
 @RestController
 @RequestMapping("/api/item")
 public class ItemRestController {
 
-    private final ItemService itemService;
+    private final ItemRestFacade itemRestFacade;
 
-    private final ItemMapper itemMapper;
-
-    @Autowired
-    public ItemRestController(ItemService itemService, ItemMapper itemMapper) {
-        this.itemService = itemService;
-        this.itemMapper = itemMapper;
+    public ItemRestController(ItemRestFacade itemRestFacade) {
+        this.itemRestFacade = itemRestFacade;
     }
+
     @ApiOperation(value = "Метод showAllItems",
             notes = "Метод showAllItems возвращает List всех ItemDto")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDto> showAllItems(){
-        return itemService.findAll().stream().map(itemMapper::toDto)
-                .collect(Collectors.toList());
+        return itemRestFacade.showAllItems();
     }
 
     @ApiOperation(value = "Метод showItemById",
@@ -40,7 +42,7 @@ public class ItemRestController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ItemDto showItemById(@PathVariable Long id){
-        return itemMapper.toDto(itemService.findById(id));
+        return itemRestFacade.showItemById(id);
     }
 
     @ApiOperation(value = "Метод createItem",
@@ -48,15 +50,14 @@ public class ItemRestController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemDto createItem(@RequestBody ItemDto itemDto){
-        return itemMapper.toDto(itemService.persist(itemMapper.toModel(itemDto)));
+        return itemRestFacade.createItem(itemDto);
     }
     @ApiOperation(value = "Метод updateItem",
             notes = "Метод updateItem принимает @RequestBody ItemDto обновляет его в базе и возвращает void")
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public void updateItem(@RequestBody ItemDto itemDto) {
-        Item item = itemMapper.toModel(itemDto);
-        itemService.update(item);
+        itemRestFacade.updateItem(itemDto);
     }
 
     /**
@@ -79,7 +80,7 @@ public class ItemRestController {
     //@Secured("ROLE_ADMIN")
     //Снять коментарий после включения security
     public void deleteItem(@PathVariable Long id) {
-        itemService.deleteByIdCascadeEnable(id);
+        itemRestFacade.deleteItem(id);
     }
 
 }
