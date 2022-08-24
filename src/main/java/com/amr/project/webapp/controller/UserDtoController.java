@@ -1,32 +1,35 @@
 package com.amr.project.webapp.controller;
 
 
-import com.amr.project.converter.UserMapper;
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import com.amr.project.facade.UserDtoFacade;
 import com.amr.project.model.dto.UserDto;
-import com.amr.project.model.entity.User;
-import com.amr.project.service.abstracts.ReadWriteService;
-import com.amr.project.service.abstracts.UserService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
 @Api(description ="REST контроллер для работы с пользователями (model-entity-User)")
 public class UserDtoController {
-    private UserService userService;
-    private UserMapper userMapper;
 
-    @Autowired
-    public UserDtoController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
+    private final UserDtoFacade userDtoFacade;
+
+    public UserDtoController(UserDtoFacade userDtoFacade) {
+        this.userDtoFacade = userDtoFacade;
     }
 
     @PostMapping("/users")
@@ -34,22 +37,21 @@ public class UserDtoController {
     @ApiOperation(value = "Метод createUser", notes = "Метод createUser принимает UserDto из тела request " +
             "сохраняет его в БД и возвращает UserDto созданного пользователя" )
     public UserDto createUser(@ApiParam("UserDto для добавления пользователя в БД") @RequestBody UserDto userDto) {
-        return userMapper.toDto(userService.persist(userMapper.toUser(userDto)));
+        return userDtoFacade.createUser(userDto);
     }
     @PutMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Метод updateUser", notes = "Метод updateUser принимает UserDto из тела request для имеющегося в БД пользователя" +
             "изменяет его представление в БД. Ничего не возвращает" )
     public void updateUser(@ApiParam("UserDto для изменения пользователя в БД") @RequestBody UserDto userDto) {
-        User newUser = userMapper.toUser(userDto);
-        userService.update(newUser);
+        userDtoFacade.updateUser(userDto);
     }
     @DeleteMapping("/user/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Метод deleteUser", notes = "Метод deleteUser принимает Id для имеющегося в БД пользователя" +
             " и удаляет его. Ничего не возвращает" )
     public void deleteUser(@ApiParam("Id пользователя из БД, которого требуется удалить") @PathVariable("id") Long id) {
-        userService.deleteByIdCascadeEnable(id);
+        userDtoFacade.deleteUser(id);
     }
 
     @GetMapping("/users")
@@ -57,7 +59,7 @@ public class UserDtoController {
     @ApiOperation(value = "Метод allShops", notes = "Метод allShops возвращает List UserDto - " +
             "список всех пользователей из БД" )
     public List<UserDto> allUsers() {
-        return userMapper.toDtos(userService.findAll());
+        return userDtoFacade.allUsers();
     }
 
     @GetMapping("/users/{id}")
@@ -65,7 +67,7 @@ public class UserDtoController {
     @ApiOperation(value = "Метод getUserById", notes = "Метод getUserById принимает Id магазина из БД " +
             "возвращает UserDto" )
     public UserDto getUserById(@ApiParam("Id пользователя из БД") @PathVariable Long id) {
-        return userMapper.toDto(userService.findById(id));
+        return userDtoFacade.getUserById(id);
     }
 
     @ApiOperation(value = "Метод getUserByName", notes = "Метод getUserByName принимает Principal магазина и " +
@@ -73,6 +75,6 @@ public class UserDtoController {
     @GetMapping("/users/user")
     @ResponseStatus(HttpStatus.OK)
     public UserDto getUserByName(Principal principal) {
-        return userMapper.toDto(userService.findByUsername(principal.getName()));
+        return userDtoFacade.getUserByName(principal);
     }
 }
