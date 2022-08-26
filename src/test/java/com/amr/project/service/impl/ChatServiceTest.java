@@ -34,7 +34,7 @@ public class ChatServiceTest {
 
     @Test
     public void getChatByUsersTest(){
-        assertThat(service.getChatByUsers("user", "seller").getId()).isEqualTo(1L);
+        assertThat(service.getChatByUsers("user", "moderator").getId()).isEqualTo(1L);
     }
     @Test
     public void getChatSetByUserNameTest(){

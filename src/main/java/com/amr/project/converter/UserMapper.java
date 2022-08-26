@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {AddressMapper.class, ImageMapper.class, ReviewMapper.class, FeedbackMapper.class, FavoriteMapper.class, DiscountMapper.class},
+        uses = {AddressMapper.class, ImageMapper.class, ReviewMapper.class, FeedbackMapper.class, FavoriteMapper.class, DiscountMapper.class,ItemMapper.class},
         imports = {Calendar.class, Date.class, LocalDate.class, ZoneId.class, Coupon.class, UUID.class, Collectors.class, Order.class, Shop.class, Chat.class})
 public interface UserMapper {
 
     @Mapping(target = "id", source = "user.id")
-    @Mapping(target = "phone", source = "user.userInfo.phone")
-    @Mapping(target = "firstName", source = "user.userInfo.firstName")
-    @Mapping(target = "lastName", source = "user.userInfo.lastName")
-    @Mapping(target = "age", source = "user.userInfo.age")
-    @Mapping(target = "gender", source = "user.userInfo.gender")
-    @Mapping(target = "birthday", source = "user.userInfo.birthday")
+    @Mapping(target = "phone", source = "user.phone")
+    @Mapping(target = "firstName", source = "user.firstName")
+    @Mapping(target = "lastName", source = "user.lastName")
+    @Mapping(target = "age", source = "user.age")
+    @Mapping(target = "gender", source = "user.gender")
+    @Mapping(target = "birthday", source = "user.birthday")
     @Mapping(target = "couponIds", expression = "java(user.getCoupons() != null ? user.getCoupons().stream()" +
             ".map(Coupon::getId).collect(Collectors.toList()) : null)")
     @Mapping(target = "orderIds", expression = "java(user.getOrders() != null ? user.getOrders().stream()" +
@@ -40,12 +40,6 @@ public interface UserMapper {
             ".map(Chat::getId).collect(Collectors.toSet()) : null)")
     UserDto toDto(User user);
 
-    @Mapping(target = "userInfo.phone", source = "phone")
-    @Mapping(target = "userInfo.firstName", source = "firstName")
-    @Mapping(target = "userInfo.lastName", source = "lastName")
-    @Mapping(target = "userInfo.age", source = "age")
-    @Mapping(target = "userInfo.gender", source = "gender")
-    @Mapping(target = "userInfo.birthday", source = "birthday")
     @Mapping(target = "secret", defaultExpression = "java(UUID.randomUUID().toString())")
     User toUser(UserDto userDto);
 

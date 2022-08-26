@@ -3,13 +3,109 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
+    <title>Moderation page</title>
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/js/main.js"></script> <!-- Gem jQuery -->
+    <script type="text/javascript" src="/search.js"></script>
+    <link rel="stylesheet" href="webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="/css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- Gem style -->
+    <link rel="stylesheet" href="/css/pagination.css"> <!-- Gem style -->
+    <script src="/js/modernizr.js"></script> <!-- Modernizr -->
+    <style>
+        button {
+            color: #fff;
+            border: 1px solid #014457;
+            border-radius: 5px;
+            width: 200px;
+            height: 35px;
+            padding-top: 0;
+            text-align: center;
+            vertical-align: center;
+        }
+
+        button:hover {
+            background: #007598;
+        }
+
+        .default {
+            background: #009898;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .btn-group-vertical {
+            margin-top: 10px;
+        }
+    </style>
+
 
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px">
+    <div class="container-fluid">
+        <img alt="Logo" src="/logo.jpg" width="30" height="30">
+        <a class="navbar-brand" href="/" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
+            Авито 2.0</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic"
+                aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse show" id="navbarBasic">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Магазины</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Контакты</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Адреса</a></li>
+                        <li><a class="dropdown-item" href="#">Телефоны</a></li>
+                        <li><a class="dropdown-item" href="#">Something else</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <input class="form-control me-2" input type="search" name="text" placeholder="Поиск товаров..."
+                   aria-label="Поиск товаров..." id="sb" size="50" style="height: 32px">
+            <button class="default" type="submit" onclick="test()" style="height: 32px; width: 80px">Найти</button>
+
+
+        </div>
+        <div class="text-nowrap float-end">
+            <!--            Кнопка выхода и приветствие-ссылка на страницу юзера. Видны только авторизованному пользователю-->
+            <ul class="px-4">
+                <li th:if="${#authorization.expression('isAuthenticated()')}"
+                    class="nav-item text-nowrap text-center text-white">
+                    <span>Привет,&nbsp;
+                    <a style="color: white; text-decoration: underline"
+                       th:href="@{/user/{id}(id=${activeUser.getId()})}"><span class="text-capitalize"
+                            th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <button
+                            class="default text-white text-center" onclick="location.href='/logout'" type="button"
+                            style="height: 32px; width: 80px">Выйти
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <div class="row">
     <div class="col-md-2">
@@ -19,18 +115,21 @@
         <ul class="nav flex-column nav-pills" id="pills-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="pills-shops-tab" data-toggle="pill" href="#shops-pill" role="tab"
-                   aria-controls="pills-shops" aria-selected="true">Магазины   <span class="badge badge-danger" th:utext="${shopsForModeration.size()}"></span>
+                   aria-controls="pills-shops" aria-selected="true">Магазины <span class="badge badge-danger"
+                                                                                   th:utext="${shopsForModeration.size()}"></span>
                     <span class="sr-only">непрочитанные сообщения</span></a>
 
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="pills-goods-tab" data-toggle="pill" href="#goods-pill" role="tab"
-                   aria-controls="pills-goods" aria-selected="false">Товары   <span class="badge badge-danger" th:utext="${itemsForModeration.size()}"></span>
+                   aria-controls="pills-goods" aria-selected="false">Товары <span class="badge badge-danger"
+                                                                                  th:utext="${itemsForModeration.size()}"></span>
                     <span class="sr-only">непрочитанные сообщения</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="pills-comments-tab" data-toggle="pill" href="#comments-pill" role="tab"
-                   aria-controls="pills-comments" aria-selected="false">Отзывы   <span class="badge badge-danger" th:utext="${reviewsForModeration.size()}"></span>
+                   aria-controls="pills-comments" aria-selected="false">Отзывы <span class="badge badge-danger"
+                                                                                     th:utext="${reviewsForModeration.size()}"></span>
                     <span class="sr-only">непрочитанные сообщения</span></a>
             </li>
         </ul>

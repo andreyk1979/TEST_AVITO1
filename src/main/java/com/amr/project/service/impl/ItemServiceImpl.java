@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements ItemService{
+public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements ItemService {
 
     protected final ItemDao itemRepository;
 
@@ -22,10 +22,19 @@ public class ItemServiceImpl extends ReadWriteServiceImpl<Item, Long> implements
     }
 
     @Override
-    @Transactional
-    public void isPretendedToBeDeleted(Long id) {
+    public List<Item> getTwoMostPopularItemForShop(Long shopId) {
+        return itemRepository.getTwoMostPopularItemForShop(shopId);
+    }
 
-        itemRepository.isPretendedToBeDeleted(id);
+    @Override
+    public List<Item> getItemsToBeModerated() {
+        return itemRepository.getItemsToBeModerated();
+    }
+
+    @Override
+    @Transactional
+    public void pretendToDelete(Long id) {
+        itemRepository.pretendToDelete(id);
     }
     
     @Override

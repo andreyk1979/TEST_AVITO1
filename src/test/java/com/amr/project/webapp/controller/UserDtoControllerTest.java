@@ -98,4 +98,6 @@ public class UserDtoControllerTest {
         assertThat("bestUser").isEqualTo(userService.findById(id).getUsername());
     }
 
+    //updateUser
+
 }

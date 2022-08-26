@@ -1,0 +1,14 @@
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=platform
+#      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - /data/mysql
+    ports:
+      - 3307:3306
+    container_name: mysql-container
+
+

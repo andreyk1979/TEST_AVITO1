@@ -147,15 +147,16 @@ jQuery.fn.putCursorAtEnd = function() {
 };
 
 //Регистрация пользователя(можно настроить, в зависимости от HTTPStatus)
-$('#addNewUserButton').click(async () =>  {
+// $('#addNewUserButton').click(async () =>  {
+async function addNewUser() {
 	let addUserForm = $('#defaultSomeForm')
-	let username = addUserForm.find('#signup-username').val();
-	let firstName = addUserForm.find('#signup-firstName').val();
-	let lastName = addUserForm.find('#signup-lastName').val();
-	let email = addUserForm.find('#signup-email').val();
-	let password = addUserForm.find('#signup-password').val();
-	let birthday = addUserForm.find('#signup-birthday').val();
-	let gender = addUserForm.find('#gender').val();
+	let username = addUserForm.find('#signup-username').val().trim();
+	let firstName = addUserForm.find('#signup-firstName').val().trim();
+	let lastName = addUserForm.find('#signup-lastName').val().trim();
+	let email = addUserForm.find('#signup-email').val().trim();
+	let password = addUserForm.find('#signup-password').val().trim();
+	let birthday = addUserForm.find('#signup-birthday').val().trim();
+	let gender = addUserForm.find('#gender').val().trim();
 	let userDto = {
 		username: username,
 		lastName: lastName,
@@ -165,7 +166,7 @@ $('#addNewUserButton').click(async () =>  {
 		password: password,
 		gender: gender
 	}
-	await fetch("registration", {
+	await fetch("/registration", {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -173,7 +174,7 @@ $('#addNewUserButton').click(async () =>  {
 		},
 		body: JSON.stringify(userDto),
 	}).then(response => {
-		if(response.ok){
+		if (response.ok) {
 			addUserForm.find('#signup-username').val('');
 			addUserForm.find('#signup-firstName').val('');
 			addUserForm.find('#signup-lastName').val('');
@@ -184,12 +185,14 @@ $('#addNewUserButton').click(async () =>  {
 			addUserForm.find('#gender').val('');
 			document.getElementById('enter-login').click();
 			$("#div-finish").html("Для окончании регистрации пройдите на почту")
-		}
-		else {
+		} else {
 			$("#div-error").html("Пользователь с этой почтой уже зарегистрирован")
 		}
 	})
-})
+}
+// })
+
+
 function isPasswordMatch() {
 	var password = $("#signup-password").val();
 	var confirmPassword = $("#second-password").val();

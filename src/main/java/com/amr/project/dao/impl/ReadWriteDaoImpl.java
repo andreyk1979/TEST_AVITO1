@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Optional;
 
 public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
     private final Class<T> clazz;
@@ -14,8 +15,7 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
 
     @SuppressWarnings("unchecked")
     public ReadWriteDaoImpl() {
-        this.clazz = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass())
+        this.clazz = (Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass() )
                 .getActualTypeArguments()[0];
     }
 
@@ -52,8 +52,8 @@ public class ReadWriteDaoImpl<T, K> implements ReadWriteDao<T, K> {
     }
 
     @Override
-    public T findById(K id) {
-        return em.find(clazz, id);
+    public Optional<T> findById(K id) {
+        return Optional.ofNullable(em.find(clazz, id));
     }
 
     @Override

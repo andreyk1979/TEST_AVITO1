@@ -6,6 +6,8 @@ import com.amr.project.service.abstracts.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ShopServiceImpl extends ReadWriteServiceImpl<Shop,Long> implements ShopService {
 
@@ -16,4 +18,8 @@ public class ShopServiceImpl extends ReadWriteServiceImpl<Shop,Long> implements 
         super(shopDao);
     }
 
+    @Override
+    public List<Shop> getShopsToBeModerated() {
+        return shopDao.getShopsToBeModerated();
+    }
 }

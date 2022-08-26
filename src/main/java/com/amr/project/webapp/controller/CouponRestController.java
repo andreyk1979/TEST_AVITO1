@@ -1,50 +1,51 @@
 package com.amr.project.webapp.controller;
 
-import com.amr.project.converter.CouponMapper;
-import com.amr.project.model.dto.CouponDto;
-import com.amr.project.model.entity.Coupon;
-import com.amr.project.service.abstracts.CouponService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import com.amr.project.facade.CouponRestFacade;
+import com.amr.project.model.dto.CouponDto;
 
 @RestController
 @RequestMapping("api/coupon")
 public class CouponRestController {
 
-    private final CouponService couponService;
-    private final CouponMapper couponMapper;
+    private final CouponRestFacade couponRestFacade;
 
-    @Autowired
-    public CouponRestController (CouponService couponService, CouponMapper couponMapper) {
-        this.couponService = couponService;
-        this.couponMapper = couponMapper;
+    public CouponRestController(CouponRestFacade couponRestFacade) {
+        this.couponRestFacade = couponRestFacade;
     }
 
     @PostMapping("/coupons")
     @ResponseStatus(HttpStatus.OK)
     public CouponDto createDiscount(@RequestBody CouponDto couponDto) {
-        return couponMapper.toDto(couponService.persist(couponMapper.toModel(couponDto)));
+        return couponRestFacade.createDiscount(couponDto);
     }
 
     @GetMapping("/coupon")
     @ResponseStatus(HttpStatus.OK)
     public List<CouponDto> allCoupons(){
-        return couponMapper.tolist(couponService.findAll());
+        return couponRestFacade.allCoupons();
     }
 
     @DeleteMapping("/coupon/{id}")
     public void deleteCoupon(@PathVariable ("id") Long id) {
-        couponService.deleteByIdCascadeEnable(id);
+        couponRestFacade.deleteCoupon(id);
     }
 
     @PutMapping("/coupons")
     @ResponseStatus(HttpStatus.OK)
     public void updateCoupon(@RequestBody CouponDto couponDto) {
-        Coupon coupon = couponMapper.toModel(couponDto);
-        couponService.update(coupon);
+        couponRestFacade.updateCoupon(couponDto);
     }
 
 

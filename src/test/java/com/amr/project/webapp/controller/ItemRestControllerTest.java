@@ -64,8 +64,12 @@ public class ItemRestControllerTest {
     public void testAddItem() throws Exception {
         MvcResult mvcResult = mvc.perform(post("/api/item")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"name\": \"test\",\n" +
-                        "    \"price\": 333\n}"))
+                .content("""
+                        {
+                        "name": "test",
+                        "price": 333
+                        }
+                        """))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();

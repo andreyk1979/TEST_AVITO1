@@ -4,38 +4,28 @@ import com.amr.project.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name="order_by_user")
 public class Order {
+    @Transient
+    static final public int EXPIRATION_HOURS = 48; // delete oder if it's not been paid during this time
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
@@ -78,6 +68,20 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Address address;
+
+    public Order() {
+        qiwiId = UUID.randomUUID().toString();
+    }
+
+    // колличество по позиции в заказе (ItemId:Count)
+    //@EnoughToLock
+    @ToString.Exclude
+    @ElementCollection
+    @CollectionTable(name="order_position_count",
+        joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "item_id")
+    @Column(name = "count")
+    private Map<Long, Integer> positionCount = new HashMap<>();
 
     @Override
     public boolean equals(Object o) {

@@ -9,6 +9,7 @@ let chatId = 0
 let notification = []
 
 $(document).ready(function connect() {
+    console.log("Here - document ready")
     let socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket)
     stompClient.connect({}, function (frame) {
@@ -21,7 +22,7 @@ $(document).ready(function connect() {
 /** Получение имени юзера текущей сессии */
 fetch(url1)
     .then(res => { res.json().then(
-        user=>{
+        user => {
             userName = user.username
             document.getElementById("userName").innerHTML = userName
         }
@@ -39,7 +40,7 @@ const showChats = (chatSet) => {
 
     setTimeout(function(){
 
-        chatSet.forEach((chat)=>{
+        chatSet.forEach((chat) => {
             let chatId = chat.id
             let chatCompanionName =''
             let count=0
@@ -49,7 +50,7 @@ const showChats = (chatSet) => {
             } else {
                 chatCompanionName = chat.fromUserName}
 
-            chat.messages.forEach((message)=>{
+            chat.messages.forEach((message) => {
                 if((!message.viewed) & (message.fromUserName === chatCompanionName)){
                     count++
                     notification.push(chatId)
@@ -118,7 +119,7 @@ const addChat = (notification) => {
     document.getElementById("chatBar").innerHTML =chatBar
 }
 
-/** Функция добовления увидомления */
+/** Функция добовления уведомления */
 function chatNotification (chatId) {
 notification.push(chatId)
     let count = notification.filter(i => i === chatId).length

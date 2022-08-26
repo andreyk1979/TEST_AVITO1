@@ -20,15 +20,15 @@ import java.util.Set;
         property = "id", scope = Long.class)
 public class UserDto {
     private Long id;
-    private String email;
-    private String username;
     private String phone;
     private String firstName;
     private String lastName;
-    private String password;
     private int age;
-    private Gender gender;
+    private GenderDto gender;
     private LocalDate birthday;
+    private String email;
+    private String username;
+    private String password;
     private String secret;
     private AddressDto address;
     private ImageDto image;
@@ -40,5 +40,4 @@ public class UserDto {
     private FavoriteDto favorite;
     private List<DiscountDto> discounts;
     private Set<Long> chatIds;
-
 }

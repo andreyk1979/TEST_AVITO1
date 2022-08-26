@@ -1,8 +1,12 @@
 package com.amr.project.service.impl;
 
 import com.amr.project.dao.abstracts.ReadWriteDao;
+import com.amr.project.model.entity.Item;
 import com.amr.project.service.abstracts.ReadWriteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 public class ReadWriteServiceImpl<T, K> implements ReadWriteService<T, K> {
@@ -53,7 +57,9 @@ public class ReadWriteServiceImpl<T, K> implements ReadWriteService<T, K> {
     @Override
     @Transactional(readOnly = true)
     public T findById(K id) {
-        return dao.findById(id);
+        return dao
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no such element"));
     }
 
     @Override

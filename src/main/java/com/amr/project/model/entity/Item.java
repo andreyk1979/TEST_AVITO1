@@ -1,30 +1,12 @@
 package com.amr.project.model.entity;
 
 import com.amr.project.model.entity.report.SalesHistory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Entity
@@ -34,6 +16,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +41,7 @@ public class Item {
 
 
     private String description;
+
     private int discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -123,8 +107,6 @@ public class Item {
     )
     @ToString.Exclude
     private List<SalesHistory> history;
-
-
     private boolean isModerated;
     private boolean isModerateAccept;
     private String moderatedRejectReason;
@@ -151,6 +133,6 @@ public class Item {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }

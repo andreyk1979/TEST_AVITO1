@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="520615765928-5gbho3qf7bd565eeskrh1lnml1cvpb02.apps.googleusercontent.com">
+    <title>Order</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/js/main.js"></script> <!-- Gem jQuery -->
+    <script src="/js/basket.js"></script>
+    <script type="/text/javascript" src="/search.js"></script>
+    <script type="/text/javascript" src="/js/googleAuth.js"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="console.log('TODO: add onload function')">
+    </script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.0.2/css/bootstrap.min.css"/>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="/css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- Gem style -->
+    <link rel="stylesheet" href="/css/pagination.css"> <!-- Gem style -->
+    <script src="/js/modernizr.js"></script> <!-- Modernizr -->
+    <style>
+        button {
+            color: #fff;
+            border: 1px solid #014457;
+            border-radius: 5px;
+            width: 200px;
+            height: 35px;
+            padding-top: 0;
+            text-align: center;
+            vertical-align: center;
+        }
+
+        button:hover {
+            background: #007598;
+        }
+
+        .default {
+            background: #009898;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .btn-group-vertical {
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #009898; height: 50px; max-width: 100%">
+    <div class="container-fluid">
+        <img alt="Logo" src="/logo.jpg" width="30" height="30">
+        <a class="navbar-brand" href="/" style="color: aliceblue; font-family: Harrington; font-size: x-large"><strong>
+            Авито 2.0</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic"
+                aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse show" id="navbarBasic">
+            <ul class="navbar-nav mb-2 mb-xl-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Главная</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                       id="navbarDropdownMenuLinkShops"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Магазины</a>
+                    <!--                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkShops"-->
+                    <!--                        th:each="shop : ${mainPageDto.getShopDtoList()}">-->
+                    <!--                        <li><a class="dropdown-item" th:href="@{/shop/{id}(id=${shop.getId()})}" th:text="${shop.getName()}">Адреса</a></li>-->
+                    <!--                    </ul>-->
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                       style="color: aliceblue; font-family: Harrington; font-size: large">Контакты</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Адреса</a></li>
+                        <li><a class="dropdown-item" href="#">Телефоны</a></li>
+                        <li><a class="dropdown-item" href="#">Something else</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <input class="form-control" input type="search" name="text" placeholder="Поиск товаров..."
+                   aria-label="Поиск товаров..." id="sb" size="50" style="height: 32px; width: 500px">
+            <button class="default" type="submit" onclick="test()" style="height: 32px; width: 80px">Найти</button>
+        </div>
+
+        <div class="text-nowrap float-end">
+            <!--            Кнопки входа и регистрации, видны только неавторизованноым юзерам-->
+            <ul th:unless="${#authorization.expression('isAuthenticated()')}" class="main-nav px-4">
+                <li class="nav-item text-nowrap text-center">
+                    <a class="cd-signin">Вход</a></li>
+                <li class="nav-item text-nowrap text-center">
+                    <a
+                            class="cd-signup">Регистрация</a></li>
+            </ul>
+            <!--            Кнопка выхода и приветствие-ссылка на страницу юзера. Видны только авторизованному пользователю-->
+            <ul class="px-4">
+                <li th:if="${#authorization.expression('isAuthenticated()')}"
+                    class="nav-item text-nowrap text-center text-white">
+                    <span>Привет,&nbsp;
+                    <a style="color: white; text-decoration: underline"
+                       th:href="@{/user/{id}(id=${activeUser.getId()})}"><span class="text-capitalize"
+                                                                               th:text="${activeUser.getUsername()}"></span>!</a>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <button
+                            class="default text-white text-center" onclick="location.href='/logout'" type="button"
+                            style="height: 32px; width: 80px">Выйти
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <ul class="nav flex-column nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-7">
+            <form th:method="POST" th:action="@{/pay/order?orderId={id}(id=${newOrder.getId()})}">
+                <table class="table text-center align-middle">
+                    <tbody>
+                    <tr th:each="item : ${newOrder.getItemsInOrder()}">
+                        <td style="height: 150px" class="align-middle text-wrap"><img
+                                style="max-width: 150px; max-height: 150px"
+                                th:src="@{'data:image/jpeg;base64,'+${item.getImages().get(0).getPictureBase64()}}">
+                        </td>
+                        <td style="height: 150px" class="align-middle text-wrap"
+                            th:text="${item.getName()}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="table-secondary">
+                            <p class="text-end fw-bold text-nowrap"><span>Итог:&nbsp;</span><span th:text="${newOrder.getTotal()}"></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-middle text-wrap" colspan="2">
+                            <p class="text-start">
+                                <span class="fw-bold">Адрес доставки:&nbsp;</span> <span class="text-start" th:text="${activeUser.getAddress()}"></span>
+                            </p>
+                            <p class="text-start">
+                                <span class="fw-bold">Дата доставки:&nbsp;</span> <span class="text-start" th:text="${newOrder.getDate()}"></span>
+                            </p>
+                            <p class="text-start">
+                                <span class="fw-bold">Email:&nbsp;</span> <span class="text-start" th:text="${activeUser.getEmail()}"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="text-end fw-bold text-nowrap">
+                    <button type="submit" class="default">Оплатить заказ</button>
+                </p>
+            </form>
+        </div>
+        <div class="col-2">Однажды здесь будет форма купона</div>
+        <div class="col-1"></div>
+    </div>
+</div>
+</body>
+</html>

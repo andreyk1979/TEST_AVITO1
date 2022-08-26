@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {ReviewMapper.class, ImageMapper.class, DiscountMapper.class, CityMapper.class,AddressMapper.class},
+        uses = {ReviewMapper.class, ImageMapper.class, DiscountMapper.class, CityMapper.class, AddressMapper.class},
         imports = {Coupon.class, Collectors.class})
 public interface ShopMapper {
 
@@ -22,6 +22,7 @@ public interface ShopMapper {
     ShopDto toDto(Shop shop);
 
     @Mapping(target = "address", source = "shopDto.addressDetails")
+    @Mapping(target = "user.id", source = "userId")
     Shop toModel(ShopDto shopDto);
 
     List<ShopDto> toDtoList(List<Shop> shopList);

@@ -1,5 +1,6 @@
 package com.amr.project;
 
+import com.amr.project.webapp.config.ChatConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;

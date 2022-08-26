@@ -1,28 +1,44 @@
 package com.amr.project.service.impl;
 
 import com.amr.project.converter.UserMapper;
+import com.amr.project.dao.UserRepository;
 import com.amr.project.dao.abstracts.UserDao;
 import com.amr.project.model.dto.UserDto;
+import com.amr.project.model.entity.AuthenticationProvider;
+import com.amr.project.model.entity.Basket;
 import com.amr.project.model.entity.User;
+import com.amr.project.model.enums.Roles;
 import com.amr.project.service.abstracts.MailService;
 import com.amr.project.service.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 
+
 @Service
-public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements UserService {
+public class UserServiceImp extends ReadWriteServiceImpl<User, Long> implements UserService {
     private final UserDao userDao;
     private final UserMapper userMapper;
     private final MailService mailService;
+    private PasswordEncoder bCryptPasswordEncoder;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImp(UserDao userDao,MailService mailService, UserMapper userMapper) {
+    public void setBCryptPasswordEncoder(PasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    @Autowired
+    public UserServiceImp(UserDao userDao, MailService mailService, UserMapper userMapper, UserRepository userRepository) {
         super(userDao);
-        this.userDao= userDao;
+        this.userDao = userDao;
         this.userMapper = userMapper;
         this.mailService = mailService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,17 +56,19 @@ public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements U
     @Transactional
     public boolean addUser(UserDto userDto) {
         User user = userMapper.toUser(userDto);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         String message = String.format("Уважамый ,%s! \n" +
-                "Вы успешно зарегистрировались на сайте Avito, \n" +
-                "для окончании регистрации пройдите по ссылке \n" +
-                "http://localhost:8888/registration/activate/%s",
+                        "Вы успешно зарегистрировались на сайте Avito, \n" +
+                        "для окончании регистрации пройдите по ссылке \n" +
+                        "http://localhost:8888/registration/activate/%s",
                 user.getUsername(), user.getSecret());
-        if(userDao.addUser(user)) {
+        if (userDao.addUser(user)) {
             mailService.send(user.getEmail(), "Окончание регистрации", message);
             return true;
         }
         return false;
     }
+
     @Override
     @Transactional
     public boolean verifyUserBySecret(User user) {
@@ -63,5 +81,33 @@ public class UserServiceImp extends ReadWriteServiceImpl<User,Long> implements U
     @Override
     public boolean existByUserName(String userName) {
         return userDao.existByUserName(userName);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
+    public void createNewUserAfterOAuthLoginSuccess(String email, String name,
+                                                    AuthenticationProvider provider) {
+        User user = new User();
+
+        user.setEmail(email);
+        user.setUsername(name);
+        user.setRole(Roles.USER);
+        user.setAuthenticationProvider(provider);
+        user.setActivate(true);
+
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUserAfterOAuthLoginSuccess(User user, String name, AuthenticationProvider provider) {
+        user.setUsername(name);
+        user.setAuthenticationProvider(provider);
+
+        userRepository.save(user);
     }
 }
